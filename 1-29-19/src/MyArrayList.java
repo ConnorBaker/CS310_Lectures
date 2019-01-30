@@ -31,7 +31,7 @@ public class MyArrayList<T> {
     // Double the capacity if there is no more space
     public void add(final T x) {
         if (size == data.length) {
-            doubleSize();
+            this.doubleSize();
         }
 
         // Insert x after all the currently stored items
@@ -57,7 +57,7 @@ public class MyArrayList<T> {
 
     // Return the item at index i
     public T get(final int i) {
-        if (isValidIndex(i)) {
+        if (this.isValidIndex(i)) {
             return data[i];
         } else {
             throw new ArrayIndexOutOfBoundsException(INVALID_INDEX);
@@ -67,7 +67,7 @@ public class MyArrayList<T> {
 
     // Set or replace the item at index i to/with x
     public void set(final int i, final T x) {
-        if (isValidIndex(i)) {
+        if (this.isValidIndex(i)) {
             data[i] = x;
         } else {
             throw new ArrayIndexOutOfBoundsException(INVALID_INDEX);
@@ -78,9 +78,9 @@ public class MyArrayList<T> {
     @SuppressWarnings("unchecked")
     public void insert(final int index, final T x) {
         if (index == size) { // We can reuse the add function we wrote if we're appending
-            add(x);
+            this.add(x);
         } else {
-            if (isValidIndex(index)) {
+            if (this.isValidIndex(index)) {
                 if (size == data.length) {
                     // Double the capacity of the array
                     final T[] newData = (T[]) new Object[size * 2];
@@ -111,7 +111,7 @@ public class MyArrayList<T> {
 	public T remove(final int i){
         final T ret;
 
-        if (isValidIndex(i)) {
+        if (this.isValidIndex(i)) {
             ret = data[i];
             System.arraycopy(data, i+1, data, i, size - (i + 1));
         } else {
@@ -143,7 +143,7 @@ public class MyArrayList<T> {
     public String toString() {
         final var s = new StringBuilder("one MyArrayList with " + size + " items:");
 
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < size; i++) {
             s.append("\n  [").append(i).append("]: ").append(data[i]);
         }
 

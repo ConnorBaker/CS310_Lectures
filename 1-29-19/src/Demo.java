@@ -2,18 +2,19 @@
  * Demo of how to use / test MyArrayList
  */
 class Demo {
+    private static final String SEPARATOR = "\n---------------------\n";
 
     public static void main(final String[] args) {
         final MyArrayList<Integer> intAL = new MyArrayList<>();
         System.out.println("Initial: " + intAL);
 
-        //System.out.println(intAL.get(3));
-
         for (int i = 0; i < 8; i++) {
             intAL.add(i);
         }
 
-        System.out.println("---------------------");
+        final Runnable printSeparator = () -> System.out.println(SEPARATOR);
+
+        printSeparator.run();
         System.out.println("After add: " + intAL);
 
 
@@ -22,7 +23,7 @@ class Demo {
         intAL.set(3, intAL.get(5));
         intAL.set(5, i);
 
-        System.out.println("---------------------");
+        printSeparator.run();
         System.out.println("After switching 3 and 5: " + intAL);
         //intAL.set(100,200);
 
@@ -32,13 +33,13 @@ class Demo {
         intAL.insert(3, 200);
         intAL.insert(intAL.size(), 300);
 
-        System.out.println("---------------------");
+        printSeparator.run();
         System.out.println("After three insertions: " + intAL);
 
 
 
 		// remove
-		System.out.println("---------------------");
+		printSeparator.run();
 		System.out.println("Removed:"+intAL.remove(0));
 		System.out.println("Removed:"+intAL.remove(5));
 		System.out.println("After two removals: " + intAL);
