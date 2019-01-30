@@ -43,13 +43,10 @@ class Demo {
 		System.out.println("Removed:"+intAL.remove(5));
 		System.out.println("After two removals: " + intAL);
 
-		/*
-		// search for items
-		System.out.println(intAL.indexOf(3));
-		System.out.println(intAL.indexOf(100));
-		//System.out.println(intAL.indexOf(null));
-		
-		*/
 
+		// search for items
+		System.out.println("Index of 3: " + intAL.indexOf(3));
+		System.out.println("Index of 100: " + intAL.indexOf(100));
+		//System.out.println(intAL.indexOf(null));
     }
 }
