@@ -2,131 +2,126 @@
  * Our expandable array class
  * generic: can hold any type
  */
- 
-public class MyArrayList<T>{
 
-	// underlying array
-	private T[] data;
-	
-	// how many items in data array currently
-	private int size;
-	
-	// constructor
-	// create an empty array of some default initial capacity	
-	@SuppressWarnings("unchecked")
-	public MyArrayList(){
-		// data = new T[5];  // this will trigger compiler error
-		// work around using Object array
-		data = (T[])new Object[5];  
-		size = 0;
-	}
-	
-	// report how many items are stored
-	// this also defines the range of "good" indexes 
-	public int size(){
-		return size;
-	}
+public class MyArrayList<T> {
+    // Constants used by the class
+    private static final int DEFAULT_SIZE = 5;
+    private static final String INVALID_INDEX = "Invalid Index";
+    // Our data structure is a fixed size array
+    private T[] data;
+    // The current number of items in our array
+    private int size;
 
+    // Create an initial array of some default capacity
+    @SuppressWarnings("unchecked")
+    public MyArrayList() {
+        // By casting an array of Object we can get around the creation of generic arrays being
+        // forbidden
+        data = (T[]) new Object[DEFAULT_SIZE];
+        size = 0;
+    }
 
-	
-	// Add an element to the end 
-	// double capacity if no more space	 		 
-	@SuppressWarnings("unchecked")
-	public void add(T x){
-		// check capacity
-		if (size == data.length){
-			//double capacity
-			T[] newData = (T[])new Object[size*2];
-			
-			//copy contents over
-			for (int i=0;i<size;i++){
-				newData[i] = data[i];
-			}
-			
-			//update the reference
-			data = newData;
-			
-		}
+    // Returns the number of items currently in the array
+    // This also defines the range of valid indices [0, size)
+    public int size() {
+        return size;
+    }
 
-		// add x to the highest possible index	
-		data[size]=x;
-		size++;
-		
-					
-	}
-	
-	private boolean isValidIndex(int i){
-		return (i>=0 && i<size);
-	}
-	
-	// return the item at index i
-	public T get(int i){
-		if (isValidIndex(i))
-			return data[i];		//this simple???	
-		else
-			throw new RuntimeException("bad index");
+    // Adds an element to the end of the list
+    // Double the capacity if there is no more space
+    public void add(final T x) {
+        if (size == data.length) {
+            this.doubleSize();
+        }
 
-	}
-	
-	// set/replace item at index i to be x	
-	public void set(int i, T x){
-		if (isValidIndex(i))
-			data[i] = x;
-		else
-			throw new RuntimeException("bad index");				
-	
-	}
-		
-	
-	// Insert x at position i, shift elements if necessary  
-	@SuppressWarnings("unchecked")
-	public void insert(int index, T x){
-		// check index
-		
-		if (index==size)//appending
-			this.add(x);
-			
-		else{
-			//insertion
-			if (isValidIndex(index)){
-				//capacity
-				if (size == data.length){
-					//double capacity
-					T[] newData = (T[])new Object[size*2];
-			
-					//copy contents over
-					for (int i=0;i<size;i++){
-						newData[i] = data[i];
-					}
-			
-					data = newData;
-				}
-				
-				//shifting
-				for (int i=size;i>index;i--){  
-					data[i] = data[i-1];
-				}
-				
-				//put down x
-				data[index]=x;
-				size++;
-			}
-			else
-				throw new RuntimeException("bad index");				
-			
-		}
+        // Insert x after all the currently stored items
+        data[size] = x;
+        size++;
+    }
 
-	}
-	
-	/*
+    @SuppressWarnings("unchecked")
+    private void doubleSize() {
+        // Double the capacity of the array
+        T[] newData = (T[]) new Object[size * 2];
+
+        // Copy the contents to the new array
+        System.arraycopy(data, 0, newData, 0, size);
+
+        // Update the reference the the new array
+        data = newData;
+    }
+
+    private boolean isValidIndex(final int i) {
+        return (0 <= i && i < size);
+    }
+
+    // Return the item at index i
+    public T get(final int i) {
+        if (this.isValidIndex(i)) {
+            return data[i];
+        } else {
+            throw new ArrayIndexOutOfBoundsException(INVALID_INDEX);
+        }
+
+    }
+
+    // Set or replace the item at index i to/with x
+    public void set(final int i, final T x) {
+        if (this.isValidIndex(i)) {
+            data[i] = x;
+        } else {
+            throw new ArrayIndexOutOfBoundsException(INVALID_INDEX);
+        }
+    }
+
+    // Insert x at position i, shifting elements if necessary
+    @SuppressWarnings("unchecked")
+    public void insert(final int index, final T x) {
+        if (index == size) { // We can reuse the add function we wrote if we're appending
+            this.add(x);
+        } else {
+            if (this.isValidIndex(index)) {
+                if (size == data.length) {
+                    // Double the capacity of the array
+                    T[] newData = (T[]) new Object[size * 2];
+
+                    // Copy the contents to the new array
+                    System.arraycopy(data, 0, newData, 0, index);
+                    System.arraycopy(data, index, newData, index + 1, size - (index + 1));
+
+                    // Update the reference the the new array
+                    data = newData;
+                } else {
+                    // Move the data after the index one space over and fill in the gap
+                    System.arraycopy(data, index, data, index + 1, size - (index + 1));
+                }
+
+                // Fill in the gap we created in moving things to make space
+                data[index] = x;
+                size++;
+            } else {
+                throw new ArrayIndexOutOfBoundsException(INVALID_INDEX);
+            }
+        }
+    }
+
 	// Remove and return element at position i
 	// shift elements to remove the gap
 	// Other variations: remove an item x?
-	
-	public T remove(int i){
-		
-	}  
-	*/
+	public T remove(final int i){
+        final T ret;
+
+        if (this.isValidIndex(i)) {
+            ret = data[i];
+            System.arraycopy(data, i+1, data, i, size - (i + 1));
+        } else {
+            throw new ArrayIndexOutOfBoundsException(INVALID_INDEX);
+        }
+
+        size--;
+        return ret;
+	}
+
 	
 	
 	/*
@@ -139,15 +134,16 @@ public class MyArrayList<T>{
 	public int indexOf(T x){
 	
 	}*/
-	
-	public String toString(){
-		StringBuilder s = new StringBuilder("one MyArrayList with " + 
-											size + " items:");
-		for (int i=0; i<size(); i++)
-			s.append("\n  ["+i+"]: "+data[i]);
-		return s.toString();
-		
-	}
+
+    public String toString() {
+        final var s = new StringBuilder("one MyArrayList with " + size + " items:");
+
+        for (int i = 0; i < this.size(); i++) {
+            s.append("\n  [").append(i).append("]: ").append(data[i]);
+        }
+
+        return s.toString();
+    }
 
 }
 
