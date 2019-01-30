@@ -1,18 +1,35 @@
 /**
- * Our expandable array class
- * generic: can hold any type
+ * A generic, expandable array.
+ * @author Connor Baker
+ * CS 310
+ * Spring 2019
  */
 
 public class MyArrayList<T> {
-    // Constants used by the class
+    /**
+     * The default is 5 so that we can ensure our {@link #add(Object)} can correctly resize
+     * the underlying data structure.
+     */
     private static final int DEFAULT_SIZE = 5;
+
     private static final String INVALID_INDEX = "Invalid Index";
-    // Our data structure is a fixed size array
+
+    private static final int NOT_FOUND = -1;
+
+    /**
+     * The underlying data structure.
+     */
     private T[] data;
-    // The current number of items in our array
+
+    /**
+     * Holds the current number of used spaces in {@link #data}.
+     */
     private int size;
 
-    // Create an initial array of some default capacity
+    /**
+     * No argument constructor.
+     * The default size is {@value DEFAULT_SIZE}.
+     */
     @SuppressWarnings("unchecked")
     public MyArrayList() {
         // By casting an array of Object we can get around the creation of generic arrays being
@@ -21,14 +38,18 @@ public class MyArrayList<T> {
         size = 0;
     }
 
-    // Returns the number of items currently in the array
-    // This also defines the range of valid indices [0, size)
+    /**
+     * Returns the number of items in an array.
+     * @return The number of items currently in the array
+     */
     public int size() {
         return size;
     }
 
-    // Adds an element to the end of the list
-    // Double the capacity if there is no more space
+    /**
+     * Adds an element to the end of the list. Doubles the capacity if there is no more space.
+     * @param x The element to be added
+     */
     public void add(final T x) {
         if (size == data.length) {
             this.doubleSize();
@@ -38,6 +59,7 @@ public class MyArrayList<T> {
         data[size] = x;
         size++;
     }
+
 
     @SuppressWarnings("unchecked")
     private void doubleSize() {
@@ -55,17 +77,26 @@ public class MyArrayList<T> {
         return (0 <= i && i < size);
     }
 
-    // Return the item at index i
+    /**
+     * Return the item at the specified index.
+     * @param i The index to retrieve from
+     * @return The value found at the index
+     * @throws ArrayIndexOutOfBoundsException If the index is not valid.
+     */
     public T get(final int i) {
         if (this.isValidIndex(i)) {
             return data[i];
         } else {
             throw new ArrayIndexOutOfBoundsException(INVALID_INDEX);
         }
-
     }
 
-    // Set or replace the item at index i to/with x
+    /**
+     * Set or replace the item at the specified index to/with the parameter.
+     * @param i The index to set.
+     * @param x The value to set the index to.
+     */
+    //
     public void set(final int i, final T x) {
         if (this.isValidIndex(i)) {
             data[i] = x;
@@ -74,7 +105,11 @@ public class MyArrayList<T> {
         }
     }
 
-    // Insert x at position i, shifting elements if necessary
+    /**
+     * Inserts an item at an index, shifting elements to the right.
+     * @param index The index to insert the item at.
+     * @param x The item to be inserted.
+     */
     @SuppressWarnings("unchecked")
     public void insert(final int index, final T x) {
         if (index == size) { // We can reuse the add function we wrote if we're appending
@@ -105,9 +140,11 @@ public class MyArrayList<T> {
         }
     }
 
-	// Remove and return element at position i
-	// shift elements to remove the gap
-	// Other variations: remove an item x?
+    /**
+     * Removes and returns an element at the given index. Shifts elements to remove the gap created.
+     * @param i The index.
+     * @return The item removed.
+     */
 	public T remove(final int i){
         final T ret;
 
@@ -122,16 +159,13 @@ public class MyArrayList<T> {
         return ret;
 	}
 
-
-	// search for x
-	// return the index for its first occurrence
-	// return -1 if not found 
-	// other variations: boolean contains()?
-	// special case?
-	
+    /**
+     * Searches for an item, returning the index if it is found, or {@value NOT_FOUND} if it is not
+     * found.
+     * @param x The item to locate.
+     * @return The index of the item, or {@value NOT_FOUND} if it is not found.
+     */
 	public int indexOf(final T x){
-        final int NOT_FOUND = -1;
-
         int i = 0;
         while (i < size && !(data[i].equals(x))) {
             i++;
@@ -140,6 +174,10 @@ public class MyArrayList<T> {
         return (i < size) ? i : NOT_FOUND;
 	}
 
+    /**
+     * Converts the list to a string.
+     * @return The array formatted as [i] get(i)
+     */
     public String toString() {
         final var s = new StringBuilder("one MyArrayList with " + size + " items:");
 
