@@ -49,8 +49,13 @@ public class MyArrayList<T> {
     /**
      * Adds an element to the end of the list. Doubles the capacity if there is no more space.
      * @param x The element to be added
+     * @throws IllegalArgumentException if {@code x} is null
      */
     public void add(final T x) {
+        if (x == null) {
+            throw new IllegalArgumentException();
+        }
+
         if (size == data.length) {
             this.doubleSize();
         }
@@ -95,9 +100,13 @@ public class MyArrayList<T> {
      * Set or replace the item at the specified index to/with the parameter.
      * @param i The index to set.
      * @param x The value to set the index to.
+     * @throws IllegalArgumentException if {@code x} is null.
      */
-    //
     public void set(final int i, final T x) {
+        if (x == null) {
+            throw new IllegalArgumentException();
+        }
+
         if (this.isValidIndex(i)) {
             data[i] = x;
         } else {
@@ -109,9 +118,14 @@ public class MyArrayList<T> {
      * Inserts an item at an index, shifting elements to the right.
      * @param index The index to insert the item at.
      * @param x The item to be inserted.
+     * @throws IllegalArgumentException if {@code x} is null.
      */
     @SuppressWarnings("unchecked")
     public void insert(final int index, final T x) {
+        if (x == null) {
+            throw new IllegalArgumentException();
+        }
+
         if (index == size) { // We can reuse the add function we wrote if we're appending
             this.add(x);
         } else {
