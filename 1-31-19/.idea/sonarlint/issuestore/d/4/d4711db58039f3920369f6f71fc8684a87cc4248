@@ -1,9 +1,35 @@
 
-isquid:S1192%"RDefine a constant instead of duplicating this literal "After removal: \n" 3 times.(ëë÷Ã
-psquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(•‘…Ê
-bsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(…ò¹ã
 bsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ÑÏÝ
-gsquid:CommentedOutCodeLine*"<This block of commented-out lines of code should be removed.(Ž‹ëøþÿÿÿÿ
 gsquid:CommentedOutCodeLine."<This block of commented-out lines of code should be removed.(å€üšþÿÿÿÿ
 asquid:CommentedOutCodeLineB"<This block of commented-out lines of code should be removed.(ò¦…C
+psquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(•‘…Ê
+gsquid:CommentedOutCodeLine*"<This block of commented-out lines of code should be removed.(Ž‹ëøþÿÿÿÿ
+isquid:S1192%"RDefine a constant instead of duplicating this literal "After removal: \n" 3 times.(ëë÷Ã
+bsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(…ò¹ã
 gsquid:CommentedOutCodeLineO"<This block of commented-out lines of code should be removed.(ÅõŽÞüÿÿÿÿ
+U
+squid:S106"9Replace this use of System.out or System.err by a logger.(·×ö08çÄÄ«Œ-
+V
+squid:S106"9Replace this use of System.out or System.err by a logger.(¨³Ë8çÄÄ«Œ-
+[
+squid:S106"9Replace this use of System.out or System.err by a logger.(À®ô’ûÿÿÿÿ8çÄÄ«Œ-
+[
+squid:S106"9Replace this use of System.out or System.err by a logger.(²£êÂüÿÿÿÿ8çÄÄ«Œ-
+V
+squid:S106"9Replace this use of System.out or System.err by a logger.(ø›ÅÏ8çÄÄ«Œ-
+U
+squid:S106"9Replace this use of System.out or System.err by a logger.(þÿé8çÄÄ«Œ-
+V
+squid:S106#"9Replace this use of System.out or System.err by a logger.(¨³Ë8çÄÄ«Œ-
+[
+squid:S106$"9Replace this use of System.out or System.err by a logger.(ƒ‘ƒøÿÿÿÿ8çÄÄ«Œ-
+V
+squid:S106%"9Replace this use of System.out or System.err by a logger.(ëë÷Ã8çÄÄ«Œ-
+[
+squid:S106&"9Replace this use of System.out or System.err by a logger.(ûÍïãùÿÿÿÿ8çÄÄ«Œ-
+V
+squid:S106'"9Replace this use of System.out or System.err by a logger.(ëë÷Ã8çÄÄ«Œ-
+[
+squid:S106("9Replace this use of System.out or System.err by a logger.(œýøÍýÿÿÿÿ8çÄÄ«Œ-
+V
+squid:S106)"9Replace this use of System.out or System.err by a logger.(ëë÷Ã8çÄÄ«Œ-
