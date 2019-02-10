@@ -11,7 +11,7 @@ public interface LinkedList<E> {
      * Must be overriden. Throws UnsupportedOperationException if not overriden.
      * @throws UnsupportedOperationException if not overriden.
      */
-    default void add() {
+    default void add(E data) {
         throw new UnsupportedOperationException();
     }
 

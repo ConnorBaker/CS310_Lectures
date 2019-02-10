@@ -4,64 +4,109 @@ import java.util.NoSuchElementException;
 public class SinglyLinkedList<E>
         implements LinkedList<E>, Iterable<E> {
     private Node<E> head;
-    private Node<E> tail;
 
     SinglyLinkedList() {
-        head = null;
-        tail = null;
+        head = new SinglyLinkedNode<>();
     }
 
-    private static class Node<E> {
+    private static class SinglyLinkedNode<E>
+            implements Node<E> {
         private E data;
         private Node<E> next;
 
-        Node() {
-            data = null;
-            next = null;
+        SinglyLinkedNode() {
+            this(null);
         }
-//
-//        void setNext(Node<E> next) {
-//            this.next = next;
-//        }
-//
-//        Node getNext() {
-//            return next;
-//        }
-//
-//        void setData(E data) {
-//            this.data = data;
-//        }
-//
-//        E getData() {
-//            return data;
-//        }
+
+        SinglyLinkedNode(E data) {
+            this(data, null);
+        }
+
+        SinglyLinkedNode(E data, Node<E> next) {
+            this.data = data;
+            this.next = next;
+        }
+
+        @Override
+        public void setNext(Node<E> next) {
+            this.next = next;
+        }
+
+        @Override
+        public Node<E> getNext() {
+            return next;
+        }
+
+        @Override
+        public void setPrev(Node<E> prev) {
+            throw new UnsupportedOperationException("Not valid for " +
+                    "SinglyLinkedList");
+        }
+
+        @Override
+        public Node<E> getPrev() {
+            throw new UnsupportedOperationException("Not valid for " +
+                    "SinglyLinkedList");
+        }
+
+        @Override
+        public void setData(E data) {
+            this.data = data;
+        }
+
+        @Override
+        public E getData() {
+            return data;
+        }
+
+        @Override
+        public String toString() {
+            return "SinglyLinkedNode{" +
+                    "data=" + data +
+                    ", next=" + next +
+                    '}';
+        }
     }
 
     private class Itr implements Iterator<E> {
-        private Node<E> current = head;
-        private Node<E> previous = null;
+        private Node<E> current;
+        private Node<E> previous;
+
+        Itr() {
+            current = new SinglyLinkedNode<>(null, head.getNext());
+            previous = new SinglyLinkedNode<>(null, head);
+        }
 
         @Override
         public boolean hasNext() {
-            return current.next != null;
+            return current.getNext() != null;
         }
 
         @Override
         public E next() {
-            final E ret = current.data;
-            previous = current;
-            current = current.next;
-            return ret;
+            // Don't use "=" assignment. We want to continue to have the
+            // iterator operating above the LinkedList. If we use assignment
+            // then they just hold references to items of the LinkedList --
+            // we want them the be nodes "floating above" the lined list
+            // which is why we must use the getter and setter methods.
+            previous.setNext(previous.getNext());
+            current.setNext(current.getNext());
+            return previous.getData();
         }
 
         public void advance() {
-            previous = current;
-            current = current.next;
+            previous.setNext(previous.getNext());
+            current.setNext(current.getNext());
         }
 
         public E removeCurrent() {
-            previous.next = null;
-            return current.data;
+            previous.setNext(null);
+            return current.getData();
+        }
+
+        public E removeAndReturnCurrent() {
+            previous.setNext(null);
+            return current.getData();
         }
 
     }
@@ -77,7 +122,7 @@ public class SinglyLinkedList<E>
      * @throws NoSuchElementException if the element was not found
      */
     @Override
-    public E remove() throws NoSuchElementException {
+    public E remove() {
         // Empty list
         if (isEmpty()) {
             throw new NoSuchElementException();
@@ -100,47 +145,58 @@ public class SinglyLinkedList<E>
 
     /**
      * Checks if the list is empty.
-     * @returns true if list is empty, false if otherwise
+     * @return true if list is empty, false if otherwise
      */
     private boolean isEmpty() {
-        return ((head == null) && (tail == null));
+        return ((head.getNext() == null) && (tail.getNext() == null));
     }
 
     /**
      * Checks if the list is a singleton.
-     * @returns true if list is empty, false if otherwise
+     * @return true if list is empty, false if otherwise
      */
     private boolean isSingleton() {
         // Transitivity allows us to avoid checking (tail == null) as well
-        return ((head == tail) && (head != null));
+        return ((head.getNext() == tail.getNext()) && (head.getNext() != null));
     }
 
 
 
     @Override
-    public void add() {
-        // Empty list
+    public void add(E data) {
         if (isEmpty()) {
-            throw new NoSuchElementException();
-        }
-
-        // List contains a single element
-        if (isSingleton()) {
-
-        }
-
-        // Must find the end of the list
-        Itr itr = new Itr();
-        while (itr.hasNext()) {
-            itr.advance();
+            addAtHead(data);
+        } else if (isSingleton()) {
+            addAtHead(data);
+        } else {
+            // Must find the end of the list
+            Iterator<E> itr = new Itr();
+            while (itr.hasNext()) {
+                itr.next();
+            }
         }
     }
 
-    private void addAtHead() {
-
+    private void addAtHead(E data) {
+        Node<E> n = new SinglyLinkedNode<>(data, null);
+        head.setNext(n);
+        tail = n;
     }
 
     private E removeAtHead() {
+        var ret = head.getData();
+        head = head.getNext();
+        return ret;
+    }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("SinglyLinedList:\n");
+        int i = 0;
+        for (Iterator<E> itr = iterator(); itr.hasNext(); i++) {
+            E e = itr.next();
+            sb.append("[").append(i).append("] = ").append(e).append("\n");
+        }
+        return sb.toString();
     }
 }
