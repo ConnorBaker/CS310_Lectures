@@ -1,8 +1,8 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class SinglyLinkedList<E>
-        implements LinkedList<E>, Iterable<E> {
+public class SinglyLinkedList<E extends  Comparable<E>>
+        implements List<E> {
     private Node<E> head;
 
     SinglyLinkedList() {
@@ -84,63 +84,46 @@ public class SinglyLinkedList<E>
 
         @Override
         public E next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            advance();
+
+            return (previous.getNext()).getData();
+        }
+
+        void advance() {
             // Don't use "=" assignment. We want to continue to have the
-            // iterator operating above the LinkedList. If we use assignment
-            // then they just hold references to items of the LinkedList --
+            // iterator operating above the List. If we use assignment
+            // then they just hold references to items of the List --
             // we want them the be nodes "floating above" the lined list
             // which is why we must use the getter and setter methods.
-            previous.setNext(previous.getNext());
-            current.setNext(current.getNext());
-            return previous.getData();
+            // Fix the Law of Demeter violation
+            // - Fixed by using additional parenthesis. We treat n.getNext() as an object,
+            //   instead of a method on an object returning an object.
+            previous.setNext(current.getNext());
+            current.setNext((current.getNext()).getNext());
         }
 
-        public void advance() {
-            previous.setNext(previous.getNext());
-            current.setNext(current.getNext());
+        private void unlinkNode() {
+            // Move current to the node after the removed node
+            current.setNext((current.getNext()).getNext());
+
+            // Set the node before the node to be removed to point past the node to be removed
+            // (which is current). This removes the only reference to the node to be removed and
+            // clears it for GC.
+            (previous.getNext()).setNext(current.getNext());
         }
 
-        public E removeCurrent() {
-            previous.setNext(null);
-            return current.getData();
+        @Override
+        public void remove() {
+            if (isEmpty()) {
+                throw new NoSuchElementException("List is empty");
+            }
+
+            unlinkNode();
         }
-
-        public E removeAndReturnCurrent() {
-            previous.setNext(null);
-            return current.getData();
-        }
-
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        return new Itr();
-    }
-
-    /**
-     *
-     * @return the removed element
-     * @throws NoSuchElementException if the element was not found
-     */
-    @Override
-    public E remove() {
-        // Empty list
-        if (isEmpty()) {
-            throw new NoSuchElementException();
-        }
-
-        // List contains a single element
-        if (isSingleton()) {
-            return removeAtHead();
-        }
-
-        // Must find the end of the list
-        // TODO: Consider using a third node to track the one before tail
-        Itr itr = new Itr();
-        while (itr.hasNext()) {
-            itr.advance();
-        }
-
-        return itr.removeCurrent();
     }
 
     /**
@@ -148,7 +131,7 @@ public class SinglyLinkedList<E>
      * @return true if list is empty, false if otherwise
      */
     private boolean isEmpty() {
-        return ((head.getNext() == null) && (tail.getNext() == null));
+        return (head.getNext() == null);
     }
 
     /**
@@ -156,47 +139,50 @@ public class SinglyLinkedList<E>
      * @return true if list is empty, false if otherwise
      */
     private boolean isSingleton() {
-        // Transitivity allows us to avoid checking (tail == null) as well
-        return ((head.getNext() == tail.getNext()) && (head.getNext() != null));
+        return (!isEmpty() && ((head.getNext()).getNext() == null));
     }
-
-
 
     @Override
     public void add(E data) {
-        if (isEmpty()) {
-            addAtHead(data);
-        } else if (isSingleton()) {
-            addAtHead(data);
-        } else {
-            // Must find the end of the list
-            Iterator<E> itr = new Itr();
-            while (itr.hasNext()) {
-                itr.next();
-            }
-        }
+        addAtHead(data);
     }
 
     private void addAtHead(E data) {
-        Node<E> n = new SinglyLinkedNode<>(data, null);
+        Node<E> n = new SinglyLinkedNode<>(data, head.getNext());
         head.setNext(n);
-        tail = n;
     }
 
-    private E removeAtHead() {
-        var ret = head.getData();
-        head = head.getNext();
+    /**
+     * Removes the element at the head.
+     * @return the removed element
+     * @throws NoSuchElementException if the element was not found
+     */
+    @Override
+    public E remove() {
+        return removeAndReturnAtHead();
+    }
+
+    private void removeAtHead() {
+        new Itr().remove();
+    }
+
+    private E removeAndReturnAtHead() {
+        Iterator<E> itr = new Itr();
+        var ret = (head.getNext()).getData();
+        itr.remove();
         return ret;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("SinglyLinedList:\n");
+
         int i = 0;
-        for (Iterator<E> itr = iterator(); itr.hasNext(); i++) {
+        for (Iterator<E> itr = new Itr(); itr.hasNext(); i++) {
             E e = itr.next();
             sb.append("[").append(i).append("] = ").append(e).append("\n");
         }
+
         return sb.toString();
     }
 }
