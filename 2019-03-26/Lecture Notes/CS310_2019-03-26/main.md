@@ -2,9 +2,9 @@
 title: "Graphs (Part 2)"
 author: [Connor Baker]
 date: 2019-03-26, Compiled on \today\ at \currenttime
-subject: "Graph representations and algorithms that operate on graphs"
+subject: "Graphs"
 keywords: [Lecture, Graphs]
-subtitle: "TODO: FILL ME OUT"
+subtitle: "Graph representations and algorithms that operate on graphs"
 lang: "en"
 titlepage: true
 titlepage-color: "0d47a1"
