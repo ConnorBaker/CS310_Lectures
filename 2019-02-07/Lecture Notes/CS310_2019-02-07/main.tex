@@ -1,0 +1,532 @@
+% Declare type of document
+\documentclass[10pt]{article}
+
+% Import Packages
+\usepackage[utf8]{inputenc}
+
+% Commonly used math symbols and fonts
+\usepackage[mathscr]{euscript}
+\usepackage{amsfonts,amsmath,amssymb,amsthm}
+\usepackage{mathtools,mathdots}
+
+% Better looking default font
+\usepackage{lmodern}
+
+% itemize environment
+\usepackage{enumitem}
+
+% Array, longtable, and booktabs
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+
+% Caption package for hiding Figure #
+\usepackage{caption}
+
+% Page formatting
+\usepackage[letterpaper, margin=1in]{geometry}
+
+% Package for nice syntax highlighting for code
+\usepackage{minted}
+
+% Allows line breaks in the math environment
+\allowdisplaybreaks
+
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+\microtypecontext{spacing=nonfrench}
+% activate={true,nocompatibility} - activate protrusion and expansion
+% final - enable microtype; use "draft" to disable
+% tracking=true, kerning=true, spacing=true - activate these techniques
+% factor=1100 - add 10% to the protrusion amount (default is 1000)
+% stretch=10, shrink=10 - reduce stretchability/shrinkability (default is 20/20)
+
+
+\title{CS 310: Iterator}
+\author{Connor Baker}
+\date{February 7, 2019}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{List Implementation $\mathbf{O(n)}$ Summary}
+\begin{center}
+    \begin{tabular}{lcccccr} \toprule
+        Implementation & get/set & add/del at end & add/del start & add/del mid & search & can grow? \\ \midrule
+        Static Array & 1 & 1 & $N$ & $N$ & $N$ & no \\
+        Dynamic Array & 1 & $\mathbf{1^*}$ & $N$ & $N$ & $N$ & no \\     Singly-Linked & $N$ & 1, $N$ & 1 & $N$ & $N$ & yes \\
+        Doubly-Linked & $N$ & 1 & 1 & $N$ & $N$ & yes \\ \bottomrule
+    \end{tabular}
+    \begin{center}*Amortized analysis\end{center}
+\end{center}
+
+
+\subsection*{Review: Pytania Questions}
+\begin{itemize}
+    \item Dynamic arrays
+    \item Linked lists
+\end{itemize}
+
+
+\subsection*{Problem: List Iteration}
+\begin{minted}{java}
+List<Intgers> l = ...;
+int sum = 0;
+for (int i = 0; i < size(); i++) {
+    sum += l.get(i);
+}
+\end{minted}
+\begin{itemize}
+    \item What is the complexity of this loop?
+    \begin{itemize}
+        \item Array-based list
+        \begin{itemize}
+            \item $O(n)$
+        \end{itemize}
+        \item Linked list-based list
+        \begin{itemize}
+            \item $O(n^2)$
+        \end{itemize}
+    \end{itemize}
+    \item Recall that
+    \begin{itemize}
+        \item \mintinline{java}{ArrayList.get(i)}: $O(1)$
+        \item \mintinline{java}{LinkedList.get(i)}: $O(n)$
+    \end{itemize}
+\end{itemize}
+
+\subsection*{\mintinline{java}{Iterator}s}
+\begin{itemize}
+    \item Data structures other than arrays have the following properties:
+    \begin{itemize}
+        \item Nontrivial get/set
+        \item Must preserve some internal structure -- that means controlling access
+        \item Element by element access takes time
+    \end{itemize}
+    \item Those qualities give rise to \mintinline{java}{Iterator}s
+    \begin{itemize}
+        \item A view of a data structure
+        \item Supports efficient iterations on the collection
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Java \mintinline{java}{Iterators}}
+\begin{itemize}
+    \item \mintinline{java}{Interface Iterator<E>}
+    \begin{itemize}
+        \item Is in \mintinline{java}{java.util}
+        \item http://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html
+    \end{itemize}
+    \item Methods
+    \begin{itemize}
+        \item \textbf{Required:} \mintinline{java}{.hasNext()} and \mintinline{java}{.next()}
+        \item Default: \mintinline{java}{.remove()} and \mintinline{java}{.forEachRemaining()}
+    \end{itemize}
+    \item Any class that implements the \mintinline{java}{List<E>} interface needs to implement these methods
+    \begin{itemize}
+        \item It follows then that \mintinline{java}{ArrayList}, \mintinline{java}{Vector}, and \mintinline{java}{Set} implement these
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Textbook Sample}
+\begin{minted}{java}
+package weiss.util;
+
+/**
+ * Iterator interface
+ */
+ public interface Iterator<AnyType> extends java.util.Iterator<AnyType> {
+    /**
+     * Tests if there are items not yet iterated over.
+     */
+    boolean hasNext();
+    
+    /**
+     * Obtains the next (as yet unseen) item in the collection.
+     */
+    AnyType next();
+    
+    /**
+     * Remove the last item returned by next.
+     * Can only be called once after next.
+     */
+    void remove();
+    }
+ }
+\end{minted}
+
+\subsection*{Java List Iterators}
+\begin{itemize}
+    \item Sub-interface of \mintinline{java}{Iterator}: give access to a position in any \mintinline{java}{Collection}
+    \item Different and more complex semantic: put a cursor \textbf{between} list items
+    \item Operations
+    \begin{itemize}
+        \item Most important methods: \mintinline{java}{.next()} and \mintinline{java}{.hasNext()}
+        \item Optional for general iterator: \mintinline{java}{.remove()}, \mintinline{java}{.previous()}, \mintinline{java}{.hasPrevious()}, and \mintinline{java}{.add()}
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Common Iterator Operations}
+\begin{itemize}
+    \item Use \mintinline{java}{.hasNext()} or \mintinline{java}{.hasPrevious()} to determine whether the end has been reached
+    \item Use \mintinline{java}{.next()} or \mintinline{java}{.previous()} to move the position of the cursor (you can modify both to return the element that the cursor moved over)
+    \end{itemize}
+\begin{minted}{java}
+List l = new List([A, B, C, D]) 
+ListIterator itr = l.iterator() // [^A B C D]
+itr.next() // [ A^B C D]
+// A
+itr.hasNext() // [ A^B C D]
+// True
+itr.next() // [ A B^C D]
+// B
+itr.previous() // [ A^B C D]
+// B
+itr.previous() // [^A B C D]
+// A
+itr.previous() // [^A B C D]
+// NoSuchElementException
+\end{minted}
+
+
+\subsection*{\mintinline{java}{ListIterator} Operations}
+\begin{itemize}
+    \item \mintinline{java}{.add(x)} add \mintinline{java}{x} before whatever \mintinline{java}{.next()} would return
+    \begin{itemize}
+        \item Insert before the implicit cursor
+    \end{itemize}
+    \item \mintinline{java}{.remove()} removes the element which was returned from the last \mintinline{java}{.next()} or \mintinline{java}{.previous()} call
+    \begin{itemize}
+         \item It is \textbf{illegal} to remove an item without first calling \mintinline{java}{.next()} or \mintinline{java}{.previous()}
+    \end{itemize}
+\end{itemize}
+
+\begin{minted}{java}
+List l = new List([A, B, C, D]) 
+ListIterator itr = l.iterator() // [^A B C D]
+itr.add(X) // [X^A B C D] 
+itr.next() // [X A^B C D]
+// A
+itr.remove() // [ X^B C D]
+itr.remove() // [ X^B C D]
+// IllegalStateException
+itr.previous() // [^X B C D]
+// X
+itr.add(Y) // [Y^X B C D]
+\end{minted}
+
+
+\subsection*{Exercise}
+\begin{itemize}
+    \item Given a list and a sequence of operations, track the location of the iterator and the contents of the list
+\end{itemize}
+
+\subsection*{\mintinline{java}{Iterator} Implementation}
+\begin{itemize}
+    \item How do we code an iterator for a list?
+    \begin{itemize}
+        \item The implementation depends on the underlying data structure
+        \item \mintinline{java}{ArrayList}, singly-linked list, and doubly-linked list should all provide their own unique iterator
+    \end{itemize}
+    \item \mintinline{java}{interface Iterator<E>}
+    \begin{itemize}
+        \item \mintinline{java}{java.util}
+        \item \mintinline{java}{boolean hasNext()}
+        \item \mintinline{java}{E next()}
+        \item How does this compare with the \mintinline{java}{Iterator}s for \mintinline{java}{ArrayList}, \mintinline{java}{LinkedList} and so on?
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Java \mintinline{java}{Iterator}s}
+\begin{itemize}
+    \item \mintinline{java}{interface Iterable<T>}
+    \begin{itemize}
+        \item \mintinline{java}{java.lang}
+        \item \mintinline{java}{Iterator<T> iterator()}
+        \item https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
+        \item The \mintinline{java}{List} is only one of its subinterfaces, and is implemented by \mintinline{java}{ArrayList}, \mintinline{java}{LinkdList}, and so on
+    \end{itemize}
+    \item What have we been missing so far?
+    \begin{itemize}
+        \item Well, when implementing our own \mintinline{java}{ArrayList} or \mintinline{java}{LinkedList}, we should have implemented \mintinline{java}{.iterator()}
+        \item The return of \mintinline{java}{.iterator()} must be an \textbf{object} that can perform \mintinline{java}{.next()} and \mintinline{java}{.hasNext()} on our list
+        \begin{itemize}
+            \item But an object of which class?
+            \begin{itemize}
+                \item Anything that implements the iterator, so that it works for our class which will implement it
+            \end{itemize}
+            \item How and where should we define that class?
+            \begin{itemize}
+                \item We can use an anonymous class, or a static nested class (or, as a worse choice, an inner class).
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsection*{\mintinline{java}{Iterator} as a Separate Class}
+\begin{minted}{java}
+package weiss.ds;
+
+public class MyContainer {
+    Object[] items;
+    int size;
+    
+    public Iterator iterator() {
+        return new MyContainerIterator(this);
+    }
+    
+    // Other methods not shown
+}
+\end{minted}
+
+\begin{minted}{java}
+// An interator class that steps through a MyContainer.
+
+package weiss.ds;
+
+class MyContainerIterator implements Iterator {
+    private int current = 0;
+    private MyContaner container;
+    
+    MyContainerIterator(MyContainer c) {
+        container = c;
+    }
+    
+    public boolean hasNext() {
+        return current < container.size;
+    }
+
+    public Object next() {
+        return container.items[current++];
+    }
+}
+\end{minted}
+
+
+\begin{itemize}
+    \item Container class
+    \begin{itemize}
+        \item Issues?
+        \begin{itemize}
+            \item It's not encapsulated properly -- really, it should be a private class inside the container that it's iterating over.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+
+\subsection*{\mintinline{java}{Iterator} as a Nested Class}
+\begin{minted}{java}
+package weiss.ds;
+
+public class MyContainer {
+    private Object[] items;
+    private int size = 0;
+    // Other methods for MyContainer not shown
+    
+    public Iterator iterator() {
+        return new LocalIterator(this);
+    }
+    
+    // The iterator class as a nested class
+    private static class LocalIterator implements Iterator {
+        private int current = 0;
+        private MyContaner container;
+        
+        MyContainerIterator(MyContainer c) {
+            container = c;
+        }
+        
+        public boolean hasNext() {
+            return current < container.size;
+        }
+    
+        public Object next() {
+            return container.items[current++];
+        }
+    }
+}
+\end{minted}
+
+\subsection*{Why use a Nested Class?}
+\begin{itemize}
+    \item Main issue: we don't want to expose details we don't have to to the outside world
+    \begin{itemize}
+        \item The container class has to reveal details to \mintinline{java}{Iterator} (non-private data)
+        \item The \mintinline{java}{Iterator} class has to be accessible to the container class (package visible)
+    \end{itemize}
+    \item Nested (private) iterator class: better encapsulation
+    \begin{itemize}
+        \item Considered as a member of the container
+        \item Can access private data of the container
+    \end{itemize}
+\end{itemize}
+
+\subsection*{\mintinline{java}{Iterator} as an Inner Class}
+\begin{minted}{java}
+package weiss.ds;
+
+public class MyContainer {
+    private Object[] items;
+    private int size = 0;
+    // Other methods for MyContainer not shown
+    
+    public Iterator iterator() {
+        return new LocalIterator(this);
+    }
+    
+    // The iterator class as an inner class
+    private class LocalIterator implements Iterator {
+        private int current = 0;
+        
+        public boolean hasNext() {
+            return current < MyContainer.this.size;
+        }
+    
+        public Object next() {
+            return MyContainer.this.items[current++];
+        }
+    }
+}
+\end{minted}
+
+\subsection*{Why use an Inner Class?}
+\begin{itemize}
+    \item Both nested and inner classes allow us to do the following:
+    \begin{itemize}
+        \item Put multiple classes in a single file
+        \item Give access to the namespace of \mintinline{java}{OuterClass}
+        \item Have access to the private methods of \mintinline{java}{OuterClass}
+    \end{itemize}
+    \item What's the difference between an inner class and a nested class?
+    \begin{itemize}
+        \item A nested class can be \mintinline{java}{static}
+        \item Inner classes, upon construction, implicitly reference the instance of the outer class which caused its construction (\mintinline{java}{MyContainer.this})
+        \begin{itemize}
+            \item The constructor can also be dropped (the \mintinline{java}{MyContainer.this} reference is optional)
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+\begin{minted}{java}
+// The iterator class as an inner class
+private class LocalIterator implements Iterator {
+    private int current = 0;
+    
+    public boolean hasNext() {
+        return current < size;
+    }
+    
+    public Object next() {
+        return items[current++];
+    }
+}
+\end{minted}
+
+
+
+
+\subsection*{More Textbook Examples}
+\begin{itemize}
+    \item Singly linked node, list, and iterator (17.1-2)
+    \begin{itemize}
+        \item All classes are separate entities!
+        \begin{itemize}
+            \item \mintinline{java}{weiss.nonstandard.LinkedList}
+            \item \mintinline{java}{weiss.nonstandard.ListNode}
+            \item \mintinline{java}{weiss.nonstandard.LinkedListIterator}
+        \end{itemize}
+    \end{itemize}
+    \item Doubly linked list (17.3-5)
+    \begin{itemize}
+        \item \mintinline{java}{weiss.util.LinkedList}
+        \item \mintinline{java}{weiss.util.LinkedList.LinkedListIterator} (inner, non-\mintinline{java}{static})
+        \item \mintinline{java}{weiss.util.LinkedList.Node} (nested, \mintinline{java}{static})
+    \end{itemize}
+\end{itemize}
+
+
+
+\subsection*{Typical Anonymous Class Style}
+\begin{minted}{java}
+class MyList<T> implements Iterable<T> {
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            public boolean hasNext() {
+                // Implementation
+            }
+            public T next() {
+                // Implementation
+            }
+        };
+    }
+    ...
+}
+\end{minted}
+
+\subsection*{Two Ways to use an \mintinline{java}{Iterator}}
+\begin{minted}{java}
+public static void main main( String[] args ) {
+    MyList<String> list = new MyList<>();
+    list.add("Alpha");
+    list.add("Bravo");
+    list.add("Charlie");
+    list.add("Delta");
+    Iterator<String> iter = list.iterator();
+    while(iter.hasNext()) {
+        String item = iter.next();
+        System.out.println(item);
+    }
+    for (String item : list) {
+        System.out.println(item);
+    }
+}
+\end{minted}
+
+
+\subsection*{\mintinline{java}{ConcurrentModificationException}}
+\begin{itemize}
+    \item Our implementation doesn't try to coordinate multiple iterators changing the structure at the same time. \textbf{Note}: this is a different issue compared to access from different threads (we will not be covering that).
+    \item Easy for reading and viewing
+    \item Difficult for modification
+\end{itemize}
+\begin{minted}{java}
+Iterator itr1 = list.iterator();
+Iterator itr2 = list.iterator();
+itr1.remove();
+itr2.next(); // Error!
+\end{minted}
+
+
+\subsection*{Practice Problems}
+\begin{itemize}
+    \item Add \mintinline{java}{.iterator()} into our class examples of \mintinline{java}{ArrayList} and \mintinline{java}{LinkedList}
+    \begin{itemize}
+        \item Pay attention to the details -- it's always the edge cases that'll get ya
+        \begin{itemize}
+            \item Where does it point when it is created?
+            \item What about \mintinline{java}{.add()} and \mintinline{java}{.remove()}?
+        \end{itemize}
+        \item What methods might be difficult in terms of time or algorithmic complexity for a singly linked list?
+        \begin{itemize}
+            \item Any algorithms which involve adding or deleting at the end of the linked list.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+
+\subsection*{Summary}
+\begin{itemize}
+    \item \mintinline{java}{Iterator}s
+    \begin{itemize}
+        \item Support efficient traversing of all elements in the data structure
+        \item Implementation details are different, but \mintinline{java}{Iterator} and \mintinline{java}{Iterable} provide a common \mintinline{java}{interface}
+    \end{itemize}
+    \item Next lecture: \mintinline{java}{Stack} and \mintinline{java}{Queue}
+    \begin{itemize}
+        \item Reading: Chapter 6, Chapter 16
+    \end{itemize}
+\end{itemize}
+
+
+
+
+\end{document}

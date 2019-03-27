@@ -1,0 +1,281 @@
+% Declare type of document
+\documentclass[10pt]{article}
+
+% Import Packages
+\usepackage[utf8]{inputenc}
+
+% Commonly used math symbols and fonts
+\usepackage[mathscr]{euscript}
+\usepackage{amsfonts,amsmath,amssymb,amsthm}
+\usepackage{mathtools,mathdots}
+
+% Better looking default font
+\usepackage{lmodern}
+
+% itemize environment
+\usepackage{enumitem}
+
+% Array, longtable, and booktabs
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+
+% Caption package for hiding Figure #
+\usepackage{caption}
+
+% Page formatting
+\usepackage[letterpaper, margin=1in]{geometry}
+
+% Package for nice syntax highlighting for code
+\usepackage{minted}
+
+% Allows line breaks in the math environment
+\allowdisplaybreaks
+
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+\microtypecontext{spacing=nonfrench}
+% activate={true,nocompatibility} - activate protrusion and expansion
+% final - enable microtype; use "draft" to disable
+% tracking=true, kerning=true, spacing=true - activate these techniques
+% factor=1100 - add 10% to the protrusion amount (default is 1000)
+% stretch=10, shrink=10 - reduce stretchability/shrinkability (default is 20/20)
+
+
+\title{CS 310: Stack and Queue (Part II)}
+\author{Connor Baker}
+\date{February 14, 2019}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Review: Stack/Queue}
+\begin{itemize}
+    \item Restricted operations give us good worst cases
+    \begin{itemize}
+        \item $O(1)$ for all supported operations
+        \item $O(n)$ space
+    \end{itemize}
+    \item Simple data structures
+    \begin{itemize}
+        \item Focus on limited operations
+        \item Can be made out of primitive data structures (arrays, linked lists, etc.)
+    \end{itemize}
+    \item Good for representing time-related data
+    \begin{itemize}
+        \item Call stack
+        \item Packet queues
+    \end{itemize}
+\end{itemize}
+
+
+
+\subsection*{Big-O Comparison}
+\begin{itemize}
+    \item Stack
+\end{itemize}
+\begin{center}
+    \begin{tabular}{lccccr} \toprule
+        Implementation & \mintinline{java}{.push()} & \mintinline{java}{.pop()} & \mintinline{java}{.top()} & \mintinline{java}{.isEmpty()} & \mintinline{java}{size} \\ \midrule
+        Array & 1$^*$ & 1 & 1 & 1 & 1 \\
+        Linked List & 1 & 1 & 1 & 1 & 1 \\ \bottomrule
+    \end{tabular}
+    \begin{center}*Amortized analysis\end{center}
+\end{center}
+\begin{itemize}
+    \item Queue
+\end{itemize}
+\begin{center}
+    \begin{tabular}{lccccr} \toprule
+        Implementation & \mintinline{java}{.enqueue()} & \mintinline{java}{.dequeue()} & \mintinline{java}{.getFront()} & \mintinline{java}{.isEmpty()} & \mintinline{java}{.size} \\ \midrule
+        Array & 1$^*$ & 1 & 1 & 1 & 1 \\
+        Linked List & 1 & 1 & 1 & 1 & 1 \\ \bottomrule
+    \end{tabular}
+    \begin{center}*Amortized analysis\end{center}
+\end{center}
+
+
+\subsection*{Warm-up}
+\begin{itemize}
+    \item What does this method do?
+
+\begin{minted}{java}
+class Node {
+    int data;
+    Node next;
+}
+void method(Node c) {
+    Stack<Node> stack = new Stack<>();
+    while (c != null) {
+        stack.push(c);
+        c = c.next;
+    }
+    while (stack.size() > 0) {
+        System.out.println(stack.pop().data);
+    }
+}
+\end{minted}
+    \item It prints out a linked list in reverse
+
+\end{itemize}
+
+
+
+
+
+\subsection*{Review: Queues}
+\begin{itemize}
+    \item FIFO
+    \item Supported operations:
+    \begin{itemize}
+        \item \mintinline{java}{.enqueue(T t)}: insert at the tail
+        \item \mintinline{java}{.dequeue()}: remove from head
+        \item \mintinline{java}{.getFront()}: return head contents
+        \item \mintinline{java}{.size()}: returns the size of the queue
+        \item \mintinline{java}{.isEmpty()}
+    \end{itemize}
+    \item Applications:
+    \begin{itemize}
+        \item Simulate a process with a FIFO order
+        \item Scheduling queue of a CPU or disk or printer
+        \item Serve as a buffer for file I/O, network communications, etc.
+    \end{itemize}
+\end{itemize}
+
+
+
+
+\subsection*{Priority Queues}
+\begin{itemize}
+    \item Much of the time tasks that we use a queue for have different priorities
+    \begin{itemize}
+        \item It is convention that the lower the priority, the better
+        \item Symmetric code if higher is better
+        \item Dequeue the ones with the ``best" priority first
+    \end{itemize}
+    \item Common priority queue operations
+    \begin{itemize}
+        \item \mintinline{java}{void insert(T x, int p)}: insert \texttt{x} with priority \texttt{p}
+        \item \mintinline{java}{T findMin()}: return the object with the ``best" priority
+        \item \mintinline{java}{.deleteMin()}: remove the object with the ``best" priority
+    \end{itemize}
+\end{itemize}
+
+
+
+
+
+\subsection*{Practice}
+\begin{itemize}
+    \item How can we implement a priority queue with the data structures that we've discussed so far?
+    \begin{itemize}
+        \item How can we implement the operations associated with a priority queue (like \mintinline{java}{.add(x)}, \mintinline{java}{.findMin()}, and \mintinline{java}{.deleteMin()})?
+        \begin{itemize}
+            \item What would the $O(n)$ of those operations be?
+        \end{itemize}
+    \end{itemize}
+    \item Candidates: dynamic arrays and linked lists
+\end{itemize}
+
+
+\subsection*{Unsorted List}
+\begin{itemize}
+    \item \mintinline{java}{.add(T t)} and \mintinline{java}{.enqueue(T t)}: same as normal queue
+    \begin{itemize}
+        \item Append to the end
+        \item Which end depends on the underlying data structure
+    \end{itemize}
+    \item Dequeue the best priority
+    \begin{itemize}
+        \item Search for the one with the best priority and remove
+        \item Shift if needed
+    \end{itemize}
+    \item Can be implemented with either dynamic array or linked list
+\end{itemize}
+
+\subsection*{Sorted List}
+\begin{itemize}
+    \item Idea: keep items sorted based on their priorities
+    \item Perform sorted insertion
+    \begin{itemize}
+        \item Which end keeps the best priority?
+        \begin{itemize}
+            \item With a dynamic array, probably the end
+            \item With a linked list, the head
+        \end{itemize}
+    \end{itemize}
+    \item Dequeue the best priority from wherever is appropriate
+\end{itemize}
+
+\subsection*{Multiple Queues}
+\begin{itemize}
+    \item Have one queue per priority level
+    \begin{itemize}
+        \item Fixed number of priorites (like high/medium/low)
+    \end{itemize}
+    \item \mintinline{java}{.enqueue(T t, Queue p)}
+    \begin{itemize}
+        \item Add to the end of the queue corresponding to \mintinline{java}{p}
+    \end{itemize}
+    \item \mintinline{java}{.dequeue()} and \mintinline{java}{.peek()}
+    \begin{itemize}
+        \item Search for a non-empty queue with the best priority
+    \end{itemize}
+\end{itemize}
+
+
+\subsection*{Priority Queue Design}
+\begin{center}
+    \begin{tabular}{lcccr} \toprule
+        Data Structure & \mintinline{java}{.enque()} & \mintinline{java}{.peek()}$^*$ & \mintinline{java}{.dequeue()}$^*$ & Notes \\ \midrule
+        Unsorted List & $O(1)$ & $O(n)$ & $O(n)$ & best priority at any location \\
+        Sorted Array & $O(n)$ & $O(1)$ & $O(1)$ & best priority at high index \\
+        Sorted Linked List & $O(n)$ & $O(1)$ & $O(1)$ & min at head or tail \\ 
+        Multiple Queues & $O(1)$ & $O(m)$ & $O(m)$ & \\\bottomrule
+    \end{tabular}
+    \begin{center}$^*$Using the best priority\end{center}
+\end{center}
+\begin{itemize}
+    \item Where $n$ is the number of items the in queue, and $m$ is the number of priority levels
+\end{itemize}
+
+\subsection*{Priority Queue}
+\begin{itemize}
+    \item There are other ways that we can implement priority queues:
+    \begin{itemize}
+        \item Binary search trees
+        \item Heaps
+        \item And others, all of which we'll look at later in the semester
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Summary}
+\begin{itemize}
+    \item Stacks and queues
+    \begin{itemize}
+        \item Try implementing them
+        \item Project 2
+    \end{itemize}
+    \item Next lecture: Trees, recursion
+    \begin{itemize}
+        \item Reading: Chapter 18, Chapter 7
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Extra: Interview Questions}
+\begin{itemize}
+    \item Assume that you only have a stack data structure available; how do you implement a queue? (Hint: you need two stacks.)
+    \item How would you use queues to implement a stack?
+    \item Design a special stack which has the following $O(1)$ operations: (there is no space requirement)
+    \begin{itemize}
+        \item \mintinline{java}{.push()}
+        \item \mintinline{java}{.pop()}
+        \item \mintinline{java}{.min()} (returns the smallest value in the stack)
+    \end{itemize}
+    \item Describe an algorithm to sort a stack in ascending order using only a second stack and a temporary variable (Hint: Tower of Hanoi)
+    \begin{itemize}
+        \item Assume normal stack implementation with only \mintinline{java}{.push()}, \mintinline{java}{.pop()}, \mintinline{java}{.peek()}, and \mintinline{java}{.isEmpty()}
+    \end{itemize}
+\end{itemize}
+
+\end{document}

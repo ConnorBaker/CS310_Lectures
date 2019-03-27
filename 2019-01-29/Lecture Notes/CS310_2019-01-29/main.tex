@@ -1,0 +1,306 @@
+% Declare type of document
+\documentclass[10pt]{article}
+
+% Import Packages
+\usepackage[utf8]{inputenc}
+
+% Commonly used math symbols and fonts
+\usepackage[mathscr]{euscript}
+\usepackage{amsfonts,amsmath,amssymb,amsthm}
+\usepackage{mathtools,mathdots}
+
+% Better looking default font
+\usepackage{lmodern}
+
+% itemize environment
+\usepackage{enumitem}
+
+% Array, longtable, and booktabs
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+
+% Caption package for hiding Figure #
+\usepackage{caption}
+
+% Page formatting
+\usepackage[letterpaper, margin=1in]{geometry}
+
+% Package for nice syntax highlighting for code
+\usepackage{minted}
+
+% Allows line breaks in the math environment
+\allowdisplaybreaks
+
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+\microtypecontext{spacing=nonfrench}
+% activate={true,nocompatibility} - activate protrusion and expansion
+% final - enable microtype; use "draft" to disable
+% tracking=true, kerning=true, spacing=true - activate these techniques
+% factor=1100 - add 10% to the protrusion amount (default is 1000)
+% stretch=10, shrink=10 - reduce stretchability/shrinkability (default is 20/20)
+
+
+\title{CS 310: Dynamic Arrays}
+\author{Connor Baker}
+\date{January 29, 2019}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Worst, Average, or Best Case}
+\begin{itemize}
+    \item Plan for the worst, hope for the best
+    \item Best case isn't usually helpful (best case is almost always $O(1)$)
+    \item Average case can be helpful but it is typically very hard to prove, or can only be shown probabilistic-ally
+    \item Worst case is the most important (usually)
+\end{itemize}
+
+\subsection*{String Concatenation}
+\begin{itemize}
+    \item Efficiency analysis needs to consider everything that the computer does
+    \begin{itemize}
+        \item Even the stuff that's not obvious!
+    \end{itemize}
+\end{itemize}
+
+\begin{minted}{java}
+void method8(String[] arr) {
+    String result = "[";
+    for (String s : arr) {
+        result += s + " ";
+    }
+    result += "]";
+    System.out.println(result);
+}
+\end{minted}
+In the code above, we might think that \mintinline{java}{result += s + " ";} is constant, but it is in fact linear. Put this inside of a \mintinline{java}{for} loop and we've got $O(n^2)$ already.
+
+
+\subsection*{New Topic: List}
+\begin{itemize}
+    \item Wikipedia: a list or sequence is an abstract data type that represents a countable number of ordered values, where the same value may occur more than once
+    \begin{itemize}
+        \item Dynamic array: like \mintinline{java}{ArrayList} from Java's \mintinline{java}{Collections} framework
+        \item Linked lists (either singly or doubly linked)
+    \end{itemize}
+\end{itemize}
+
+
+\subsection*{Outline Today}
+\begin{itemize}
+    \item Goals today: check how to implement an expandable array similar to \texttt{ArrayList}
+    \begin{itemize}
+        \item Generic type with type parameters
+        \item Implementation highlights
+        \begin{itemize}
+            \item Size can grow if needed
+            \item Lacking nice \texttt{[]} syntax: use \mintinline{java}{.get()} and \mintinline{java}{.set()}
+            \item Other convenient operations supported
+        \end{itemize}
+        \item Analyze the complexity
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Our Expandable Array}
+\begin{itemize}
+    \item Using an underlying array to keep data
+    \begin{minted}{java}
+public class MyArrayList<T> {
+    T[] data;
+    int size;
+    ...
+}    
+    \end{minted}
+    \item Generic class (an array that can hold any type \texttt{T})
+    \item \texttt{data} is a standard fixed sized array
+    \begin{itemize}
+        \item Use consecutive locations, no ``holes" allowed
+    \end{itemize}
+    \item If/when \texttt{data} runs out of space, expand it: when? how?
+    \begin{itemize}
+        \item When we absolutely must (do it lazily). We can increase the space available by allocating an array of twice the size and copying over the old contents to the new array.
+    \end{itemize}
+    \item What is the use of size?
+    \begin{itemize}
+        \item Using a variable to hold it means that looking up the size of the array is $O(1)$.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Create MyArrayList}
+\begin{minted}{java}
+public class MyArrayList<T> {
+    T[] data; // Holds elements
+    int size; // Virtual size
+    public MyArrayList(); // Initialize fields
+    public int size(); // Virtual size of ArrayList
+    public void add(T x); // Add an element to the end
+    public T get(int i); // Accessing an element
+    public void set(int i, T x);
+    
+    // Only replaces an existing element
+    public void insert(int i, T x);
+    
+    /// Insert x at position i, shift elements if necessary
+    public T remove(int i);
+    
+    // Remove element at position i, shift elements to remove the gap
+    public int indexOf(T x);
+}
+\end{minted}
+
+\subsection*{Expanding Array}
+\begin{itemize}
+    \item Which methods need to expand?
+    \begin{itemize}
+        \item Any method which modifies the size of the array.
+    \end{itemize}
+    \item When to expand?
+    \begin{itemize}
+        \item If/when data runs out of space
+    \end{itemize}
+    \item How to expand array \mintinline{java}{data}?
+    \begin{enumerate}
+        \item Allocate a new larger array \mintinline{java}{data2}
+        \item Copy from \mintinline{java}{data} to \mintinline{java}{data2}
+        \item Update reference: set \mintinline{java}{data} to \mintinline{java}{data2}
+        \item GC gets the old array
+    \end{enumerate}
+\end{itemize}
+
+\subsection*{Implementation}
+\begin{itemize}
+    \item Demo in Java
+\end{itemize}
+
+\subsection*{Key Observations}
+\begin{itemize}
+    \item Can't do \mintinline{java}{new T[10]}, instead use \mintinline{java}{(Object[])} to cast it to a generic array
+    \begin{itemize}
+        \item Recall that arrays are co-variant (preserves the ordering of types ($\leq$), which orders types from more specific to more generic) and generics are invariant
+        \item Casting to an array of object from a generic array (and vice versa) are considered unsafe operations
+        \begin{itemize}
+            \item We can use \mintinline{java}{@SuppressWarnings("unchecked")} to silence the compiler, but only when we absolutely must
+        \end{itemize}
+    \end{itemize}
+    \item Magic numbers: standard Java \mintinline{java}{ArrayList} increases the new size to \mintinline{java}{3/2*oldSize+1}
+    \begin{itemize}
+        \item Chose based on engineering experience rather than theory, can use bit shifts to compute the size quickly
+        \item Similarly, default size = 10
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Complexity}
+\begin{itemize}
+    \item \mintinline{java}{ArrayList} of size $N$
+    \begin{center}
+    \begin{tabular}{l>{$}r<{$}} \toprule
+        Method & \text{Big-}O \\ \midrule
+        \mintinline{java}{.size()} & O(1) \\
+        \mintinline{java}{.get(i)} & O(1) \\
+        \mintinline{java}{.set(i, x)} & O(1) \\
+        \mintinline{java}{.add(x)} & O(n) \\
+        \mintinline{java}{.insert(i, x)} & O(n) \\
+        \mintinline{java}{.remove(i)} & O(n) \\
+        \mintinline{java}{.indexOf(x)} & O(n) \\ \bottomrule
+    \end{tabular}
+    \end{center}
+\end{itemize}
+
+\subsection*{Compare with a Static Array}
+\begin{center}
+\begin{tabular}{lcccccr} \toprule
+    Implementation & get/set & add/del at end & add/del at start & add/del in mid & search & can grow? \\ \midrule
+    Static Array & 1 & 1 & $N$ & $N$ & $N$ & no \\
+    Dynamic Array & 1 & $\mathbf{N}$ & $N$ & $N$ & $N$ & yes \\ \bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+    \item Array of size $N$
+    \item Worst case
+    \item Wait... we are only occasionally expanding the array, so do we care about all these other things?
+\end{itemize}
+
+\subsection*{Amortized Analysis for \mintinline{java}{add(x)}}
+
+\begin{center}
+    \begin{tabular}{lcccccccccccr} \toprule
+        i-th call & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\ \midrule
+        size & 1 & 2 & 4 & 4 & 8 & 8 & 8 & 8 & 16 & 16 & 16 & 16 \\
+        Cost of doubling/copying & - & 1 & 2 & - & 4 & - & - & - & 8 & - & - & - \\
+        Cost of putting \texttt{x} & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\ \midrule
+        Total cost & 1 & 2 & 3 & 1 & 5 & 1 & 1 & 1 & 9 & 1 & 1 & 1 \\ \bottomrule
+    \end{tabular}
+\end{center}
+\begin{itemize}
+    \item Assume that we start with \mintinline{java}{capacity = 1}
+    \item Assume that we always double the capacity
+    \item Worst case: keep adding, no removing
+\end{itemize}
+
+\subsection*{Dynamic Array Add: Algebraic Approach}
+\begin{itemize}
+    \item If we always double the array...
+    \item $c_i$ is the cost of the $i$-th call
+    \begin{itemize}
+        \item If $i-1$ is an exact power of 2, we need to expand and $c_i = 1$
+    \end{itemize}
+    \item Total time for $N$ operations is $O(n)$ as shown below
+    \begin{align*}
+        \sum_{i=1}^n n &\leq + \sum_{j=0}^{\lfloor \log(n)\rfloor} 2^j \\
+        &< n + 2^{\lfloor \log(n) \rfloor + 1} \\
+        & = n + 2\cdot 2^{\lfloor \log(n) \rfloor} \\
+        &\leq n+2n \\
+        &= 3n
+    \end{align*}
+    \begin{itemize}
+        \item Amortized analysis shows that \mintinline{java}{add(x)} is $O(1)$
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Amortized Analysis}
+\begin{itemize}
+    \item Consider a sequence of $M$ operations
+    $$
+    \text{amortized efficiency} = \frac{\text{worst-case sequence efficiency}}{M}
+    $$
+    \item Looks at the time performance a sequence of operations averaged over the number of operations: $T(n)/n$
+    \item Shows that the average cost over time isn't as bad as the worst case for a single operation
+    \item This is \textbf{NOT} the same as average case analysis
+    \begin{itemize}
+        \item \textbf{Average case:} the expected cost of each operation (innately probabilistic)
+        \item \textbf{Amortized:} the average cost of each operation is the worst case
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Complexity}
+\begin{center}
+    \begin{tabular}{lcccccr} \toprule
+        Implementation & get/set & add/del at end & add/del start & add/del mid & search & can grow? \\ \midrule
+        Static Array & 1 & 1 & $N$ & $N$ & $N$ & no \\
+        Dynamic Array & 1 & $\mathbf{1^*}$ & $N$ & $N$ & $N$ & no \\ \bottomrule
+    \end{tabular}
+    \begin{center}*Amortized analysis\end{center}
+\end{center}
+\begin{itemize}
+    \item \mintinline{java}{.add()} and \mintinline{java}{.remove()} are amortized as a constant
+    \item Now competitive with a static array for linear operations
+\end{itemize}
+
+
+\subsection*{Take-Home}
+\begin{itemize}
+    \item Today: expandable array
+    \begin{itemize}
+        \item Practice by completing the code
+        \item Time/space best/worst case analysis
+    \end{itemize}
+    \item Next time: linked lists!
+    \begin{itemize}
+        \item Reading: Chapter 17 of Weiss
+    \end{itemize}
+\end{itemize}
+
+
+\end{document}

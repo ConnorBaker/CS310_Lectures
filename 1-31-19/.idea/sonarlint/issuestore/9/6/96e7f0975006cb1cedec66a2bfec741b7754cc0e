@@ -1,9 +1,0 @@
-
-csquid:S00112q"FDefine and throw a dedicated exception instead of using a generic one.(¯åÕøÿÿÿÿ
-hsquid:CommentedOutCodeLine—"<This block of commented-out lines of code should be removed.(ÑÕãÅÿÿÿÿÿ
-csquid:S00112:"FDefine and throw a dedicated exception instead of using a generic one.(¯åÕøÿÿÿÿ
-hsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(á²ï—ıÿÿÿÿ
-_squid:S2259¸"BA "NullPointerException" could be thrown; "head" is nullable here.(Î¿Æ±ıÿÿÿÿ
-osquid:S2293#"YReplace the type specification in this constructor call with the diamond operator ("<>").(ÕË›I
-W
-squid:S106¡"9Replace this use of System.out or System.err by a logger.(²ì°…8åÄÄ«Œ-

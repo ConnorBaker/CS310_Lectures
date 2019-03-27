@@ -1,0 +1,371 @@
+% Declare type of document
+\documentclass[10pt]{article}
+
+% Import Packages
+\usepackage[utf8]{inputenc}
+
+% Commonly used math symbols and fonts
+\usepackage[mathscr]{euscript}
+\usepackage{amsfonts,amsmath,amssymb,amsthm}
+\usepackage{mathtools,mathdots}
+
+% Better looking default font
+\usepackage{lmodern}
+
+% Enumerate environment
+\usepackage{enumitem}
+
+% Array, longtable, and booktabs
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+
+% Caption package for hiding Figure #
+\usepackage{caption}
+
+% Page formatting
+\usepackage[letterpaper, margin=1in]{geometry}
+
+% Package for nice syntax highlighting for code
+\usepackage{minted}
+
+% Allows line breaks in the math environment
+\allowdisplaybreaks
+
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+\microtypecontext{spacing=nonfrench}
+% activate={true,nocompatibility} - activate protrusion and expansion
+% final - enable microtype; use "draft" to disable
+% tracking=true, kerning=true, spacing=true - activate these techniques
+% factor=1100 - add 10% to the protrusion amount (default is 1000)
+% stretch=10, shrink=10 - reduce stretchability/shrinkability (default is 20/20)
+
+
+\title{CS 310: Computational Complexity}
+\author{Connor Baker}
+\date{January 24, 2019}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Warm-up Exercise}
+\begin{itemize}
+\item Let's make a box that will hold anything
+\item Let's make a bunch of boxes
+\item Let's play with the boxes
+\item Let's add \texttt{JavaDoc} comments
+\end{itemize}
+
+\subsection*{Algorithm Analysis}
+\begin{itemize}
+\item An algorithm is how you do things
+\begin{itemize}
+\item Data structures need algorithms to perform operations on the data they contain
+\end{itemize}
+\item Algorithm analysis analyzes how well an algorithm performs
+\begin{itemize}
+\item The definition of well depends on the problem
+\end{itemize}
+\end{itemize}
+
+\subsection*{Three Complexities}
+\begin{itemize}
+\item Time complexity
+\begin{itemize}
+\item How much time given a lot of data?
+\end{itemize}
+\item Space complexity
+\begin{itemize}
+\item How much memory given a lot of data?
+\end{itemize}
+\item Implementation complexity
+\begin{itemize}
+\item How hard is the algorithm to write?
+\end{itemize}
+\end{itemize}
+
+\subsection*{Mathematical Analysis}
+\begin{itemize}
+\item Decompose the program into individual operations
+\item Each operation takes some constant amount of time and is execute with some frequency
+\begin{itemize}
+\item The exact time depends on the machine and compiler
+\item The frequency depends on the algorithm and input
+\end{itemize}
+\item Notes:
+\begin{itemize}
+\item Can be used to predict performance
+\item Machine independent for comparison purpose
+\item May not be easy to analyze
+\end{itemize}
+\end{itemize}
+\subsection*{Modeling Time/Space Complexity}
+\begin{itemize}
+\item Represent complexity as a function of the input
+\item When referring to the time complexity, we use $T(n)$ where $n$ is usually the \textbf{input size}.
+\end{itemize}
+
+\subsection*{Sample Problems}
+
+\begin{itemize}
+\item Let's look at a simple program and compute $T(n)$. Assume that each statement takes some constant time $t$ to execute.
+\begin{minted}{java}
+//input array A is of size n
+void method1(int [] A) {
+    int n = A.length; return A[0]+n;
+}
+\end{minted}
+\begin{itemize}
+    \item Takes time $2$ to execute
+\end{itemize}
+
+\item What about $T(n)$ of a single loop?
+\begin{minted}{java}
+void method2(int[] A, int m) {
+    int n = A.length;
+    for(int i = 0; i < n; i++) {
+        A[i] += m;
+    }
+}
+\end{minted}
+\begin{itemize}
+    \item Takes time $3n+2$ to execute
+\end{itemize}
+
+\item What if there are more operations in that loop?
+\begin{minted}{java}
+void method3(int[] A, int m) {
+    int n = A.length;
+    for(int i = 0; i < n; i++) {
+        A[i] += m;
+        System.out.println(A[i]);
+    }
+}
+\end{minted}
+\begin{itemize}
+    \item Takes time $4n+2$ to execute
+\end{itemize}
+
+\item What if we have sequential loops?
+\begin{minted}{java}
+void method4(int[] A, int m) {
+    int n = A.length;
+    for(int i = 0; i < n; i++) {
+        A[i] += m;
+    }
+    for(int i = 0; i < n; i++) {
+        System.out.println(A[i]);
+    }
+}
+\end{minted}
+\begin{itemize}
+    \item Takes time $6n+3$ to execute
+\end{itemize}
+
+\item What if there's more than one factor?
+\begin{minted}{java}
+void method5(int[] A, int[] B) { 
+    int n = A.length;
+    int m = B.length;
+    for(int i = 0; i < n; i++) {
+        System.out.println(A[i]);
+    }
+    for(int i = 0; i < m; i++) {
+        System.out.println(B[i]);
+    }
+}
+\end{minted}
+\begin{itemize}
+    \item Takes time $6n+4$ to execute
+\end{itemize}
+
+\item What if we have nested loops?
+\begin{minted}{java}
+void method6(int[] A) {
+    int n = A.length;
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            System.out.println("("+A[i]+","+A[j]+")");
+        }
+    }
+}
+\end{minted}
+\begin{itemize}
+    \item Takes time $2+2n+n+3n^2 = 3n^2 + 3n + 2$ to execute
+\end{itemize}
+
+\item What if we have multi-factor nested loops?
+\begin{minted}{java}
+void method7(int[] A, int[] B) {
+    int n = A.length;
+    int m = B.length;
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < m; j++) {
+            System.out.println("("+A[i]+","+B[j]+")");
+        }
+    }
+}
+\end{minted}
+\begin{itemize}
+    \item Takes time $3+2n+n+2m+nm=nm+2(n+m)+n+3$ to execute
+\end{itemize}
+\end{itemize}
+
+\subsection*{Algorithm Time Complexity}
+\begin{itemize}
+\item Algorithmic time/space complexity depend on problem size
+\item Often have some input parameter like $n$ that is representative of the problem size
+\item Our previous examples have as input an array of size $n$
+\item Model time/space complexity as functions of those parameters
+\end{itemize}
+
+\subsection*{Big O Notation}
+\begin{itemize}
+\item \textbf{Big-O} notation: bounding how fast functions grow based on input/problem size
+\item $T(n)$ is $O(F(n))$ if there are positive constants $c$ and $n_0$ such that$$n \geq n_0,\ T(n) \leq cF(n)$$
+\item Bottomline:
+\begin{itemize}
+\item If $T(n)$ is $O(F(n))$, then $F(n)$ grows as fast or faster than $T(n)$
+\end{itemize}
+\end{itemize}
+
+\subsection*{Big-O Example}
+\begin{itemize}
+\item Show that $f(n) = 2n^2 + 3n + 2$ is $O(n^3)$
+\item Pick $c=0.5$
+\begin{itemize}
+\item For $n_0 = 6,\ 0.5\cdot n^3 \geq 2n^2 + 3n + 2$
+\end{itemize}
+\item Exercise:
+\begin{itemize}
+\item Can you show that $g(n) = n^3$ is $O(2n^2+3n+2)$?
+\begin{itemize}
+    \item Of course! Pick some arbitrarily big $n_0$, or find the least value that does the job by setting them equal to each other and solving for the intersection.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\subsection*{Basic Rules of Big-O}
+\begin{itemize}
+\item Constant additions disappear
+\item Constant multiples disappear
+\item Non-constant multiples multiply
+\begin{itemize}
+\item Doing a constant operation $2N$ times is $O(N)$
+\item Doing a $O(N)$ operation $N/2$ times is $O(N^2)$
+\item Need space for half an array with $N$ elements is $O(N)$ space overhead
+\end{itemize}
+\item Function calls are not free (including library calls, though they are usually very well optimized)
+\end{itemize}
+
+\subsection*{Growth Ordering}
+\begin{center}
+\begin{tabular}{l >{$}l<{$} >{$}l<{$} >{$}l<{$}}\toprule
+    Name & \text{Leading Term} & \text{Big-O} & \text{Example} \\ \midrule
+    Constant & 1, 5, c & O(1) & 2.5, 85, 2c \\
+    Log-Log & \log(\log(n)) & O(\log(\log(n)) & 10+(\log(\log(n)+5) \\
+    Log & \log(n) & O(\log(n)) & 5\log(n) + 2\log(n^2) \\ \midrule
+    Linear & n & O(n) & 10n + \log(n) \\
+    N-log-N & n\log(n) & O(n\log(n)) & 3.5n\log(n)+10n+8 \\
+    Super-linear & n^{1.x} & O(n^{1.x}) & 2n^{1.2} + 3n\log(n) - n+2 \\
+    Quadratic & n^2 & O(n^2) & n^2 + n\log(n) \\
+    Cubic & n^3 & O(n^3) & 0.1n^3 + 8n^{1.5} + \log(n) \\ \midrule
+    Polynomial & n^c & O(n^c) & a_nx^n+\dots+a_1x+a_0 \\ 
+    Exponential & c^n & O(c^n) & 8(2^n) - n + 2 \\
+    Factorial & n! & O(n!) & 0.25n! + 10n^{100} +2n^2 \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Quick Rules of Thumb}
+\begin{itemize}
+\item $O(1)$ - usually doing something that takes a fixed amount of time regardless of the problem/input size, no matter how long that time is
+\item $O(\log(n))$ - dividing a problem in half repeatedly and working on only one half each time
+\item $O(n)$ - doing something with each item of data (or a fraction of the data, like $n/2$)
+\item $O(n\log(n))$ - dividing a problem in half repeatedly and working on both halves each time
+\item $O(n^2)$ - nested loops that both go through each item
+\item $O(n^3)$ - three nested loops that each go through all data
+\item $O$([anything more than $n^x$]) - you're usually doing it wrong
+\end{itemize}
+
+\subsection*{Common Patterns}
+\begin{itemize}
+\item Adjacent loops are additive: $2\times n$ is $O(n)$
+\item Nested loops are multiplicative (usually a polynomial)
+\item Repeated halving usually involves a logarithm
+\begin{itemize}
+\item Binary search is $O(\log(n))$
+\item Fastest sorting algorithms are $O(n\log(n))$
+\item Proofs are harder because they generally require solving recurrence relations
+\end{itemize}
+\item There are lots of special cases -- so be careful!
+\end{itemize}
+
+\subsection*{Other Bounding Notations}
+\begin{itemize}
+\item Big-O: Upper bound
+\begin{itemize}
+\item $2n^2 +3n+2$ is $O(n^3)$ and $O(2^n)$ and $O(n^2)$
+\end{itemize}
+\item Big-$\Omega$: Lower bound
+\begin{itemize}
+\item $T(n)$ is $\Omega(F(n))$ if there are positive constants $c$ and $n_0$ such that when $n\geq n_0,\ T(n) \geq cF(n)$
+\item $2n^2 + 3n + 2$ is $\Omega(n)$ and $\Omega(\log(n))$ and $\Omega(n^2)$
+\end{itemize}
+\item Big-$\Theta$: Upper and lower bound
+\begin{itemize}
+\item If something is $O(F(n))$ and $\Omega(F(n))$ it is $\Theta(F(n))$
+\item $2n^2+3n+2$ is $\Theta(n^2)$
+\end{itemize}
+\item Little-o: Upper bounded by but not lower bounded by
+\begin{itemize}
+\item $T(n)$ grows much slower than $F(n)$
+\item $2n^2+3n+2$ is $o(n^3)$
+\end{itemize}
+\end{itemize}
+
+\subsection*{Worst, Average, or Best Case?}
+\begin{itemize}
+\item Plan for the worst, hope for the best
+\item Best case isn't usually helpful
+\begin{itemize}
+\item This is because the best case is almost always $O(1)$
+\end{itemize}
+\item Average case can be helpful (typically requires probabilistic analysis to ``prove'' it)
+\item Worst case is the most important, usually
+\end{itemize}
+
+\subsection*{Learning Complexity Analysis}
+\begin{itemize}
+\item Analyzing a complex algorithm is hard; more in CS 483
+\begin{itemize}
+\item Most analyses in here will be straight-forward
+\item Mostly use the common patterns that were given above
+\end{itemize}
+\item If you haven't got a clue looking at the code, trying running it and checking
+\end{itemize}
+
+\subsection*{Take-Home}
+\begin{itemize}
+\item Today: order analysis captures the big picture of algorithm complexity
+\begin{itemize}
+\item Different functions grow at different rates
+\item Big O: upper bound (there are also other bounds)
+\end{itemize}
+\item Next time
+\begin{itemize}
+\item Reading: finish Chapter 5, Chapter 15
+\item Practice: Exercises 5.39 and 5.44 which explore string concatenation
+\end{itemize}
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+\end{document}
