@@ -1,0 +1,820 @@
+%%
+% Copyright (c) 2017 - 2019, Pascal Wagler;  
+% Copyright (c) 2014 - 2019, John MacFarlane
+% 
+% All rights reserved.
+% 
+% Redistribution and use in source and binary forms, with or without 
+% modification, are permitted provided that the following conditions 
+% are met:
+% 
+% - Redistributions of source code must retain the above copyright 
+% notice, this list of conditions and the following disclaimer.
+% 
+% - Redistributions in binary form must reproduce the above copyright 
+% notice, this list of conditions and the following disclaimer in the 
+% documentation and/or other materials provided with the distribution.
+% 
+% - Neither the name of John MacFarlane nor the names of other 
+% contributors may be used to endorse or promote products derived 
+% from this software without specific prior written permission.
+% 
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+% COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+% POSSIBILITY OF SUCH DAMAGE.
+%%
+
+%%
+% This is the Eisvogel pandoc LaTeX template.
+%
+% For usage information and examples visit the official GitHub page:
+% https://github.com/Wandmalfarbe/pandoc-latex-template
+%%
+
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*,table}{xcolor}
+%
+\documentclass[
+  10pt,
+  english,
+  letterpaper,
+,tablecaptionabove
+]{scrartcl}
+\usepackage{lmodern}
+\usepackage{setspace}
+\setstretch{1.2}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\definecolor{default-linkcolor}{HTML}{A50000}
+\definecolor{default-filecolor}{HTML}{A50000}
+\definecolor{default-citecolor}{HTML}{4077C0}
+\definecolor{default-urlcolor}{HTML}{4077C0}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Graphs (Part 1)},
+  pdfauthor={Connor Baker},
+  pdfsubject={Graphs},
+  pdfkeywords={Lecture, Graphs},
+  pdfborder={0 0 0},
+  breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=2.5cm,includehead=true,includefoot=true,centering]{geometry}
+\usepackage{listings}
+\newcommand{\passthrough}[1]{#1}
+\lstset{defaultdialect=[5.3]Lua}
+\lstset{defaultdialect=[x86masm]Assembler}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% Make use of float-package and set default placement for figures to H
+\usepackage{float}
+\floatplacement{figure}{H}
+
+\setcounter{page}{0}
+\lstset{breaklines=true}
+\lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{blue}\hookrightarrow\space}}}
+\usepackage{datetime}
+\settimeformat{ampmtime}
+\usepackage{lastpage}
+\ifnum 0\ifxetex 1\fi=0 % if pdftex or luatex
+  \usepackage[shorthands=off,main=english]{babel}
+\else % if xetex
+    % See issue https://github.com/reutenauer/polyglossia/issues/127
+  \renewcommand*\familydefault{\sfdefault}
+    % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{english}
+\fi
+
+\title{Graphs (Part 1)}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Definition of a graphs, different types of graphs and their properties}
+\author{Connor Baker}
+\date{2019-03-21, Compiled on \today~at \currenttime}
+
+
+
+
+
+%%
+%% added
+%%
+
+%
+% language specification
+%
+% If no language is specified, use English as the default main document language.
+%
+
+
+%
+% for the background color of the title page
+%
+\usepackage{pagecolor}
+\usepackage{afterpage}
+
+%
+% TOC depth and 
+% section numbering depth
+%
+\setcounter{tocdepth}{3}
+
+%
+% break urls
+%
+\PassOptionsToPackage{hyphens}{url}
+
+%
+% When using babel or polyglossia with biblatex, loading csquotes is recommended 
+% to ensure that quoted texts are typeset according to the rules of your main language.
+%
+\usepackage{csquotes}
+
+%
+% captions
+%
+\definecolor{caption-color}{HTML}{777777}
+\usepackage[font={stretch=1.2}, textfont={color=caption-color}, position=top, skip=4mm, labelfont=bf, singlelinecheck=false, justification=raggedright]{caption}
+\setcapindent{0em}
+
+%
+% blockquote
+%
+\definecolor{blockquote-border}{RGB}{221,221,221}
+\definecolor{blockquote-text}{RGB}{119,119,119}
+\usepackage{mdframed}
+\newmdenv[rightline=false,bottomline=false,topline=false,linewidth=3pt,linecolor=blockquote-border,skipabove=\parskip]{customblockquote}
+\renewenvironment{quote}{\begin{customblockquote}\list{}{\rightmargin=0em\leftmargin=0em}%
+\item\relax\color{blockquote-text}\ignorespaces}{\unskip\unskip\endlist\end{customblockquote}}
+
+%
+% Source Sans Pro as the de­fault font fam­ily
+% Source Code Pro for monospace text
+%
+% 'default' option sets the default 
+% font family to Source Sans Pro, not \sfdefault.
+%
+\usepackage[default]{sourcesanspro}
+\usepackage{sourcecodepro}
+
+% XeLaTeX specific adjustments for straight quotes: https://tex.stackexchange.com/a/354887
+% This issue is already fixed (see https://github.com/silkeh/latex-sourcecodepro/pull/5) but the 
+% fix is still unreleased.
+% TODO: Remove this workaround when the new version of sourcecodepro is released on CTAN.
+\ifxetex
+\makeatletter
+\defaultfontfeatures[\ttfamily]
+  { Numbers   = \sourcecodepro@figurestyle,
+    Scale     = \SourceCodePro@scale,
+    Extension = .otf }
+\setmonofont
+  [ UprightFont    = *-\sourcecodepro@regstyle,
+    ItalicFont     = *-\sourcecodepro@regstyle It,
+    BoldFont       = *-\sourcecodepro@boldstyle,
+    BoldItalicFont = *-\sourcecodepro@boldstyle It ]
+  {SourceCodePro}
+\makeatother
+\fi
+
+%
+% heading color
+%
+\definecolor{heading-color}{RGB}{40,40,40}
+\addtokomafont{section}{\color{heading-color}}
+% When using the classes report, scrreprt, book, 
+% scrbook or memoir, uncomment the following line.
+%\addtokomafont{chapter}{\color{heading-color}}
+
+%
+% variables for title and author
+%
+\usepackage{titling}
+\title{Graphs (Part 1)}
+\author{Connor Baker}
+
+%
+% tables
+%
+
+%
+% remove paragraph indention
+%
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+%
+%
+% Listings
+%
+%
+
+
+%
+% listing colors
+%
+\definecolor{listing-background}{HTML}{F7F7F7}
+\definecolor{listing-rule}{HTML}{B3B2B3}
+\definecolor{listing-numbers}{HTML}{B3B2B3}
+\definecolor{listing-text-color}{HTML}{000000}
+\definecolor{listing-keyword}{HTML}{435489}
+\definecolor{listing-identifier}{HTML}{435489}
+\definecolor{listing-string}{HTML}{00999A}
+\definecolor{listing-comment}{HTML}{8E8E8E}
+\definecolor{listing-javadoc-comment}{HTML}{006CA9}
+
+\lstdefinestyle{eisvogel_listing_style}{
+  language         = java,
+  numbers          = left,
+  xleftmargin      = 2.7em,
+  framexleftmargin = 2.5em,
+  backgroundcolor  = \color{listing-background},
+  basicstyle       = \color{listing-text-color}\small\ttfamily{}\linespread{1.15}, % print whole listing small
+  breaklines       = true,
+  frame            = single,
+  framesep         = 0.19em,
+  rulecolor        = \color{listing-rule},
+  frameround       = ffff,
+  tabsize          = 4,
+  numberstyle      = \color{listing-numbers},
+  aboveskip        = -0.7em,
+  belowskip        = 0.1em,
+  abovecaptionskip = 0em,
+  belowcaptionskip = 1em,
+  keywordstyle     = \color{listing-keyword}\bfseries,
+  classoffset      = 0,
+  sensitive        = true,
+  identifierstyle  = \color{listing-identifier},
+  commentstyle     = \color{listing-comment},
+  morecomment      = [s][\color{listing-javadoc-comment}]{/**}{*/},
+  stringstyle      = \color{listing-string},
+  showstringspaces = false,
+  escapeinside     = {/*@}{@*/}, % Allow LaTeX inside these special comments
+  literate         =
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\'e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\EUR}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+  {…}{{\ldots}}1 {≥}{{>=}}1 {≤}{{<=}}1 {„}{{\glqq}}1 {“}{{\grqq}}1
+  {”}{{''}}1
+}
+\lstset{style=eisvogel_listing_style}
+
+\lstdefinelanguage{XML}{
+  morestring      = [b]",
+  moredelim       = [s][\bfseries\color{listing-keyword}]{<}{\ },
+  moredelim       = [s][\bfseries\color{listing-keyword}]{</}{>},
+  moredelim       = [l][\bfseries\color{listing-keyword}]{/>},
+  moredelim       = [l][\bfseries\color{listing-keyword}]{>},
+  morecomment     = [s]{<?}{?>},
+  morecomment     = [s]{<!--}{-->},
+  commentstyle    = \color{listing-comment},
+  stringstyle     = \color{listing-string},
+  identifierstyle = \color{listing-identifier}
+}
+
+%
+% header and footer
+%
+\usepackage{fancyhdr}
+
+\fancypagestyle{eisvogel-header-footer}{
+  \fancyhead{}
+  \fancyfoot{}
+  \lhead[2019-03-21]{Graphs (Part 1)}
+  \chead[]{}
+  \rhead[Graphs (Part 1)]{2019-03-21}
+  \lfoot[\thepage~of \pageref{LastPage}]{Connor Baker}
+  \cfoot[]{}
+  \rfoot[Connor Baker]{\thepage~of \pageref{LastPage}}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+\pagestyle{eisvogel-header-footer}
+
+%%
+%% end added
+%%
+
+\begin{document}
+
+%%
+%% begin titlepage
+%%
+
+\begin{titlepage}
+\newgeometry{left=6cm}
+\definecolor{titlepage-color}{HTML}{0d47a1}
+\newpagecolor{titlepage-color}\afterpage{\restorepagecolor}
+\newcommand{\colorRule}[3][black]{\textcolor[HTML]{#1}{\rule{#2}{#3}}}
+\begin{flushleft}
+\noindent
+\\[-1em]
+\color[HTML]{FFFFFF}
+\makebox[0pt][l]{\colorRule[FFFFFF]{1.3\textwidth}{2pt}}
+\par
+\noindent
+
+{ \setstretch{1.4}
+\vfill
+\noindent {\huge \textbf{\textsf{Graphs (Part 1)}}}
+\vskip 1em
+{\Large \textsf{Definition of a graphs, different types of graphs and their properties}}
+\vskip 2em
+\noindent
+{\Large \textsf{Connor Baker}
+\vfill
+}
+
+
+\textsf{2019-03-21, Compiled on \today~at \currenttime}}
+\end{flushleft}
+\end{titlepage}
+\restoregeometry
+
+%%
+%% end titlepage
+%%
+
+
+
+\hypertarget{graphs-part-1}{%
+\section{Graphs (Part 1)}\label{graphs-part-1}}
+
+\hypertarget{graphs}{%
+\subsection{Graphs}\label{graphs}}
+
+\begin{itemize}
+\tightlist
+\item
+  A graph is defined as the set \(G = (V, E)\), where
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(V\) is a set of vertices or nodes
+  \item
+    \(E\) is a set of edges, where each edge is pair \((v,w)\) and
+    \(v,w\in V\)
+  \end{itemize}
+\item
+  We checked trees before
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Trees are DAGs (directed acyclic graphs)
+  \item
+    General graphs usually have edges with more features
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{edge-features}{%
+\subsection{Edge Features}\label{edge-features}}
+
+\begin{itemize}
+\tightlist
+\item
+  Edge direction
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Directed graphs: \((u,v)\) and \((v,u)\) are not the same
+  \end{itemize}
+\item
+  Edge weight
+
+  \begin{itemize}
+  \tightlist
+  \item
+    There can be a cost associated with the edge. When we think of edges
+    as tuples, we can think of the cost \(c\) as making a coordinate
+    pair a triplet \((u,v,c)\).
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{types-of-graphs}{%
+\subsection{Types of Graphs}\label{types-of-graphs}}
+
+\begin{itemize}
+\tightlist
+\item
+  Directed vs.~Undirected
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Presence or absence of weighted edges
+  \end{itemize}
+\item
+  Weighted vs.~Unweighted
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Presence or absence of edge weights
+  \end{itemize}
+\item
+  Cyclic vs.~Acyclic
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Presence or absence of cycles
+  \end{itemize}
+\item
+  Dense vs.~Sparse
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Presence or absence of a large number of edges relative to the
+    number of vertices
+  \end{itemize}
+\item
+  Connected vs.~Disconnected
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Presence or absence of the property that there is a path from every
+    vertex to every other vertex (when a graph has this property, we
+    call it \emph{strongly connected})
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{densesparse-graphs}{%
+\subsection{Dense/Sparse Graphs}\label{densesparse-graphs}}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/1.png}
+\caption{A visual comparison between a sparse and dense graph
+\((V = 50)\) Sedgewick et. al's Algorithms, 4th ed.~Chp. 4.1}
+\end{figure}
+
+\hypertarget{terms}{%
+\subsection{Terms}\label{terms}}
+
+\begin{itemize}
+\tightlist
+\item
+  Nodes (also called vertices when specifically talking about graphs)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(|V|\) is the number of vertices
+  \end{itemize}
+\item
+  Edges
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(|E|\) is the number of edges
+  \item
+    It is always true that \(|E| \leq |V|^2\)
+  \end{itemize}
+\item
+  Connection
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Vertex \(w\) is adjacent to vertex \(v\) iff. \((v,w) \in E\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \emph{Directed graph}: \(w\) is adjacent to \(v\neq v\) is
+      adjacent to \(w\)
+    \end{itemize}
+  \item
+    A \emph{path} is a sequence of vertices connected by edges
+
+    \begin{itemize}
+    \tightlist
+    \item
+      A sequence of edges \(w_1, w_2, \dots, w_n\) is a path iff.
+      \((w_i, w_{i+1}) \in E\) for all \(i\)
+    \item
+      \emph{Path length}: the length of a path is defined by the number
+      of edges divided by the sum of the edge weights
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{graph-example}{%
+\subsection{Graph Example}\label{graph-example}}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/2.png}
+\caption{Example 1}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  Directed, weighted graph
+\item
+  \(|V| = 7\)
+\item
+  \(|E| = 12\)
+\item
+  Which vertices are adjacent to \(V_3\)?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(V_2, V_4, V_5, V_6\)
+  \end{itemize}
+\item
+  List a path from \(V_3\) to \(V_1\)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(V_3, V_2, V_0, V_1\)
+  \item
+    Unweighted path length: 3
+  \item
+    Weighted path length: 2 + 4 + 2 = 8
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{review-graphs}{%
+\subsection{Review: Graphs}\label{review-graphs}}
+
+\hypertarget{general-graph-terms}{%
+\subsubsection{General Graph Terms}\label{general-graph-terms}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(|V|\) and \(|E|\)
+\item
+  Adjacent vertices
+\item
+  Simple path
+\item
+  Cycle
+\item
+  Degree (of a vertex)
+\end{itemize}
+
+\hypertarget{types-of-graphs-1}{%
+\subsubsection{Types of Graphs}\label{types-of-graphs-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  Directed vs.~Undirected
+\item
+  Weighted vs.~Unweighted
+\item
+  Cyclic vs.~Acyclic
+\item
+  Dense vs.~Sparse
+\item
+  Connected vs.~Disconnected
+\item
+  DAG
+\end{itemize}
+
+\hypertarget{more-terms}{%
+\subsection{More Terms}\label{more-terms}}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Simple path}: a path where all the vertices are distinct except
+  the first and last, which can be the same
+\item
+  \emph{Cycle}: a path that begins and ends at the same vertex and
+  contains at least one edge
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Simple cycle follows from the definition of simple path above
+  \end{itemize}
+\item
+  Vertex \(v\) is reachable from vertex \(2\) if there is a path from
+  \(w\) to \(v\)
+\item
+  \emph{Degree of a vertex}: the number of edges incident to it
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \emph{Indegree of \(v\)}: the number of incoming edges \((u,v)\)
+  \item
+    \emph{Outdegree of \(v\)}: the number of outgoing edges \((v,w)\)
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{graph-example-1}{%
+\subsection{Graph Example}\label{graph-example-1}}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/2.png}
+\caption{Example 2}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  List a path
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(V_3, V_2, V_0, V_3, V_6, V_5\)
+  \end{itemize}
+\item
+  List a simple path
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(V_3, V_2, V_0, V_1, V_3\)
+  \end{itemize}
+\item
+  List a cycle
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(V_3, V_2, V_0, V_3, V_2, V_0, V_3\)
+  \end{itemize}
+\item
+  List a simple cycle
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(V_3, V_2, V_0, V_1, V_3\)
+  \end{itemize}
+\item
+  Is \(V_0\) reachable from \(V_5\)?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    No it is not (\(V_5\) has outdegree zero)
+  \end{itemize}
+\item
+  Is \(V_0\) reachable from \(V_1\)?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Yes, we have the path \(V_1, V_3, V_2, V_0\)
+  \end{itemize}
+\item
+  Degree of \(V_3\): 6
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Indegree: 2
+  \item
+    Outdegree: 4
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{graphs-everywhere}{%
+\subsection{Graphs Everywhere}\label{graphs-everywhere}}
+
+\begin{itemize}
+\tightlist
+\item
+  They can represent a wide variety of data or relations
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Genetic distances
+  \item
+    Airline flights and costs
+  \item
+    Migration patterns
+  \item
+    Function call graphs
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{road-map}{%
+\subsection{Road Map}\label{road-map}}
+
+\begin{itemize}
+\tightlist
+\item
+  Graph basics
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Definitions and terms
+  \item
+    Applications
+  \end{itemize}
+\item
+  Graph representations
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Adjacency matrix
+  \item
+    Adjacency list
+  \end{itemize}
+\item
+  Graph algorithms
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Graph traversal
+  \item
+    Shortest path problem
+  \item
+    Many more
+  \end{itemize}
+\end{itemize}
+
+\end{document}

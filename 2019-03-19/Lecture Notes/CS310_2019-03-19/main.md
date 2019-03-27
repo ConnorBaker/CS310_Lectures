@@ -76,7 +76,7 @@ repeat
   
 ## Linear Probing Example
 
-![Linear probing hash table after each insertion, from Weiss, Figure 20.4](images/1.png){ width=50% }
+![Linear probing hash table after each insertion. From Weiss, Figure 20.4](images/1.png){ width=50% }
 
 ## Linear Probing (Continued)
 
@@ -152,7 +152,7 @@ repeat
 
 ## Linear Probing: Primary Clustering
 
-![Clustering in linear probing $(M = 64)$Sedgewick et. al's Algorithms, 4th ed. Chp. 3.4](images/3.png){ width=50% }
+![Clustering in linear probing $(M = 64)$. Sedgewick et. al's Algorithms, 4th ed. Chp. 3.4](images/3.png){ width=50% }
 
 ![Table occupancy patterns (2,048 keys, tables laid out in 128-position rows). Sedgewick et. al's Algorithms, 4th ed. Chp. 3.4](images/4.png){ width=100% }
 
