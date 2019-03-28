@@ -7,9 +7,9 @@ keywords: [Lecture, Graphs]
 subtitle: "Graph representations and algorithms that operate on graphs"
 lang: "en"
 titlepage: true
-titlepage-color: "0d47a1"
-titlepage-text-color: "FFFFFF"
-titlepage-rule-color: "FFFFFF"
+titlepage-color: "FFFFFF"
+titlepage-text-color: "0d47a1"
+titlepage-rule-color: "0d47a1"
 titlepage-rule-height: 2
 papersize: "letter"
 fontsize: "10pt"
