@@ -174,7 +174,7 @@ Here, we use the same collection of eight disjoint sets that we used in [Quick U
 + union$(4, 5)$
   + Graphical representation:
 
-    ![Tree representation of disjoint sets after performing union$(4, 5)$](images/1.png){ width=75% }
+    ![Tree representation of disjoint sets after performing union$(4, 5)$](images/1.png){ width=50% }
 
   + Tabular representation:
 
@@ -192,7 +192,7 @@ Here, we use the same collection of eight disjoint sets that we used in [Quick U
 + union$(6, 7)$
   + Graphical representation:
 
-    ![Tree representation of disjoint sets after performing union$(6, 7)$](images/2.png){ width=75% }
+    ![Tree representation of disjoint sets after performing union$(6, 7)$](images/2.png){ width=50% }
 
   + Tabular representation:
 
@@ -210,7 +210,7 @@ Here, we use the same collection of eight disjoint sets that we used in [Quick U
 + union$(4, 7)$
   + Graphical representation:
 
-    ![Tree representation of disjoint sets after performing union$(4, 7)$](images/3.png){ width=100% }
+    ![Tree representation of disjoint sets after performing union$(4, 7)$](images/3.png){ width=50% }
 
   + Tabular representation:
 
@@ -278,7 +278,7 @@ Tree (naive)  |$O(1)^*$| $O(n)$ |
     + Break the tie by using the root of the first element as the new root
   + Avoid constructing tall trees
 
-![Union by rank example](images/4.png){ width=100% }
+![Union by rank example](images/4.png){ width=75% }
 
 + `arr[i]` representation:
   + Case where $(\geq 0)$: parent of element of $i$
