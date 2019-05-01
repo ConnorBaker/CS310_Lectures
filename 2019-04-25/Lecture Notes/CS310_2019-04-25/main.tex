@@ -1,0 +1,728 @@
+%%
+% Copyright (c) 2017 - 2019, Pascal Wagler;  
+% Copyright (c) 2014 - 2019, John MacFarlane
+% 
+% All rights reserved.
+% 
+% Redistribution and use in source and binary forms, with or without 
+% modification, are permitted provided that the following conditions 
+% are met:
+% 
+% - Redistributions of source code must retain the above copyright 
+% notice, this list of conditions and the following disclaimer.
+% 
+% - Redistributions in binary form must reproduce the above copyright 
+% notice, this list of conditions and the following disclaimer in the 
+% documentation and/or other materials provided with the distribution.
+% 
+% - Neither the name of John MacFarlane nor the names of other 
+% contributors may be used to endorse or promote products derived 
+% from this software without specific prior written permission.
+% 
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+% COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+% POSSIBILITY OF SUCH DAMAGE.
+%%
+
+%%
+% This is the Eisvogel pandoc LaTeX template.
+%
+% For usage information and examples visit the official GitHub page:
+% https://github.com/Wandmalfarbe/pandoc-latex-template
+%%
+
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*,table}{xcolor}
+%
+\documentclass[
+  10pt,
+  english,
+  letterpaper,
+,tablecaptionabove
+]{scrartcl}
+\usepackage{lmodern}
+\usepackage{setspace}
+\setstretch{1.2}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\definecolor{default-linkcolor}{HTML}{A50000}
+\definecolor{default-filecolor}{HTML}{A50000}
+\definecolor{default-citecolor}{HTML}{4077C0}
+\definecolor{default-urlcolor}{HTML}{4077C0}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Disjoint Sets and Union Find},
+  pdfauthor={Connor Baker},
+  pdfsubject={Disjoint Sets and Union Find},
+  pdfkeywords={Lecture, Disjoint Sets, Union Find},
+  pdfborder={0 0 0},
+  breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=2.5cm,includehead=true,includefoot=true,centering]{geometry}
+\usepackage{listings}
+\newcommand{\passthrough}[1]{#1}
+\lstset{defaultdialect=[5.3]Lua}
+\lstset{defaultdialect=[x86masm]Assembler}
+\usepackage{longtable,booktabs}
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% Make use of float-package and set default placement for figures to H
+\usepackage{float}
+\floatplacement{figure}{H}
+
+\setcounter{page}{0}
+\lstset{breaklines=true}
+\lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{blue}\hookrightarrow\space}}}
+\usepackage{datetime}
+\settimeformat{ampmtime}
+\usepackage{lastpage}
+\ifnum 0\ifxetex 1\fi=0 % if pdftex or luatex
+  \usepackage[shorthands=off,main=english]{babel}
+\else % if xetex
+    % See issue https://github.com/reutenauer/polyglossia/issues/127
+  \renewcommand*\familydefault{\sfdefault}
+    % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{english}
+\fi
+
+\title{Disjoint Sets and Union Find}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{An improved union, improved find, path compression, and rank-union
+variations}
+\author{Connor Baker}
+\date{2019-04-25, Compiled on \today~at \currenttime}
+
+
+
+
+
+%%
+%% added
+%%
+
+%
+% language specification
+%
+% If no language is specified, use English as the default main document language.
+%
+
+
+%
+% for the background color of the title page
+%
+\usepackage{pagecolor}
+\usepackage{afterpage}
+
+%
+% TOC depth and 
+% section numbering depth
+%
+\setcounter{tocdepth}{3}
+
+%
+% break urls
+%
+\PassOptionsToPackage{hyphens}{url}
+
+%
+% When using babel or polyglossia with biblatex, loading csquotes is recommended 
+% to ensure that quoted texts are typeset according to the rules of your main language.
+%
+\usepackage{csquotes}
+
+%
+% captions
+%
+\definecolor{caption-color}{HTML}{777777}
+\usepackage[font={stretch=1.2}, textfont={color=caption-color}, position=top, skip=4mm, labelfont=bf, singlelinecheck=false, justification=raggedright]{caption}
+\setcapindent{0em}
+
+%
+% blockquote
+%
+\definecolor{blockquote-border}{RGB}{221,221,221}
+\definecolor{blockquote-text}{RGB}{119,119,119}
+\usepackage{mdframed}
+\newmdenv[rightline=false,bottomline=false,topline=false,linewidth=3pt,linecolor=blockquote-border,skipabove=\parskip]{customblockquote}
+\renewenvironment{quote}{\begin{customblockquote}\list{}{\rightmargin=0em\leftmargin=0em}%
+\item\relax\color{blockquote-text}\ignorespaces}{\unskip\unskip\endlist\end{customblockquote}}
+
+%
+% Source Sans Pro as the de­fault font fam­ily
+% Source Code Pro for monospace text
+%
+% 'default' option sets the default 
+% font family to Source Sans Pro, not \sfdefault.
+%
+\usepackage[default]{sourcesanspro}
+\usepackage{sourcecodepro}
+
+% XeLaTeX specific adjustments for straight quotes: https://tex.stackexchange.com/a/354887
+% This issue is already fixed (see https://github.com/silkeh/latex-sourcecodepro/pull/5) but the 
+% fix is still unreleased.
+% TODO: Remove this workaround when the new version of sourcecodepro is released on CTAN.
+\ifxetex
+\makeatletter
+\defaultfontfeatures[\ttfamily]
+  { Numbers   = \sourcecodepro@figurestyle,
+    Scale     = \SourceCodePro@scale,
+    Extension = .otf }
+\setmonofont
+  [ UprightFont    = *-\sourcecodepro@regstyle,
+    ItalicFont     = *-\sourcecodepro@regstyle It,
+    BoldFont       = *-\sourcecodepro@boldstyle,
+    BoldItalicFont = *-\sourcecodepro@boldstyle It ]
+  {SourceCodePro}
+\makeatother
+\fi
+
+%
+% heading color
+%
+\definecolor{heading-color}{RGB}{40,40,40}
+\addtokomafont{section}{\color{heading-color}}
+% When using the classes report, scrreprt, book, 
+% scrbook or memoir, uncomment the following line.
+%\addtokomafont{chapter}{\color{heading-color}}
+
+%
+% variables for title and author
+%
+\usepackage{titling}
+\title{Disjoint Sets and Union Find}
+\author{Connor Baker}
+
+%
+% tables
+%
+
+\definecolor{table-row-color}{HTML}{F5F5F5}
+\definecolor{table-rule-color}{HTML}{999999}
+
+%\arrayrulecolor{black!40}
+\arrayrulecolor{table-rule-color}     % color of \toprule, \midrule, \bottomrule
+\setlength\heavyrulewidth{0.3ex}      % thickness of \toprule, \bottomrule
+\renewcommand{\arraystretch}{1.3}     % spacing (padding)
+
+% Reset rownum counter so that each table
+% starts with the same row colors.
+% https://tex.stackexchange.com/questions/170637/restarting-rowcolors
+\let\oldlongtable\longtable
+\let\endoldlongtable\endlongtable
+\renewenvironment{longtable}{
+\rowcolors{3}{}{table-row-color!100}  % row color
+\oldlongtable} {
+\endoldlongtable
+\global\rownum=0\relax}
+
+% Unfortunately the colored cells extend beyond the edge of the 
+% table because pandoc uses @-expressions (@{}) like so: 
+%
+% \begin{longtable}[]{@{}ll@{}}
+% \end{longtable}
+%
+% https://en.wikibooks.org/wiki/LaTeX/Tables#.40-expressions
+
+%
+% remove paragraph indention
+%
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+%
+%
+% Listings
+%
+%
+
+
+%
+% listing colors
+%
+\definecolor{listing-background}{HTML}{F7F7F7}
+\definecolor{listing-rule}{HTML}{B3B2B3}
+\definecolor{listing-numbers}{HTML}{B3B2B3}
+\definecolor{listing-text-color}{HTML}{000000}
+\definecolor{listing-keyword}{HTML}{435489}
+\definecolor{listing-identifier}{HTML}{435489}
+\definecolor{listing-string}{HTML}{00999A}
+\definecolor{listing-comment}{HTML}{8E8E8E}
+\definecolor{listing-javadoc-comment}{HTML}{006CA9}
+
+\lstdefinestyle{eisvogel_listing_style}{
+  language         = java,
+  numbers          = left,
+  xleftmargin      = 2.7em,
+  framexleftmargin = 2.5em,
+  backgroundcolor  = \color{listing-background},
+  basicstyle       = \color{listing-text-color}\small\ttfamily{}\linespread{1.15}, % print whole listing small
+  breaklines       = true,
+  frame            = single,
+  framesep         = 0.19em,
+  rulecolor        = \color{listing-rule},
+  frameround       = ffff,
+  tabsize          = 4,
+  numberstyle      = \color{listing-numbers},
+  aboveskip        = -0.7em,
+  belowskip        = 0.1em,
+  abovecaptionskip = 0em,
+  belowcaptionskip = 1em,
+  keywordstyle     = \color{listing-keyword}\bfseries,
+  classoffset      = 0,
+  sensitive        = true,
+  identifierstyle  = \color{listing-identifier},
+  commentstyle     = \color{listing-comment},
+  morecomment      = [s][\color{listing-javadoc-comment}]{/**}{*/},
+  stringstyle      = \color{listing-string},
+  showstringspaces = false,
+  escapeinside     = {/*@}{@*/}, % Allow LaTeX inside these special comments
+  literate         =
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\'e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\EUR}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+  {…}{{\ldots}}1 {≥}{{>=}}1 {≤}{{<=}}1 {„}{{\glqq}}1 {“}{{\grqq}}1
+  {”}{{''}}1
+}
+\lstset{style=eisvogel_listing_style}
+
+\lstdefinelanguage{XML}{
+  morestring      = [b]",
+  moredelim       = [s][\bfseries\color{listing-keyword}]{<}{\ },
+  moredelim       = [s][\bfseries\color{listing-keyword}]{</}{>},
+  moredelim       = [l][\bfseries\color{listing-keyword}]{/>},
+  moredelim       = [l][\bfseries\color{listing-keyword}]{>},
+  morecomment     = [s]{<?}{?>},
+  morecomment     = [s]{<!--}{-->},
+  commentstyle    = \color{listing-comment},
+  stringstyle     = \color{listing-string},
+  identifierstyle = \color{listing-identifier}
+}
+
+%
+% header and footer
+%
+\usepackage{fancyhdr}
+
+\fancypagestyle{eisvogel-header-footer}{
+  \fancyhead{}
+  \fancyfoot{}
+  \lhead[2019-04-25]{Disjoint Sets and Union Find}
+  \chead[]{}
+  \rhead[Disjoint Sets and Union Find]{2019-04-25}
+  \lfoot[\thepage~of \pageref{LastPage}]{Connor Baker}
+  \cfoot[]{}
+  \rfoot[Connor Baker]{\thepage~of \pageref{LastPage}}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+\pagestyle{eisvogel-header-footer}
+
+%%
+%% end added
+%%
+
+\begin{document}
+
+%%
+%% begin titlepage
+%%
+
+\begin{titlepage}
+\newgeometry{left=6cm}
+\definecolor{titlepage-color}{HTML}{FFFFFF}
+\newpagecolor{titlepage-color}\afterpage{\restorepagecolor}
+\newcommand{\colorRule}[3][black]{\textcolor[HTML]{#1}{\rule{#2}{#3}}}
+\begin{flushleft}
+\noindent
+\\[-1em]
+\color[HTML]{0d47a1}
+\makebox[0pt][l]{\colorRule[0d47a1]{1.3\textwidth}{2pt}}
+\par
+\noindent
+
+{ \setstretch{1.4}
+\vfill
+\noindent {\huge \textbf{\textsf{Disjoint Sets and Union Find}}}
+\vskip 1em
+{\Large \textsf{An improved union, improved find, path compression, and rank-union
+variations}}
+\vskip 2em
+\noindent
+{\Large \textsf{Connor Baker}
+\vfill
+}
+
+
+\textsf{2019-04-25, Compiled on \today~at \currenttime}}
+\end{flushleft}
+\end{titlepage}
+\restoregeometry
+
+%%
+%% end titlepage
+%%
+
+
+
+\hypertarget{disjoint-sets-and-union-find-part-2}{%
+\section{Disjoint Sets and Union Find (Part
+2)}\label{disjoint-sets-and-union-find-part-2}}
+
+\hypertarget{improved-find}{%
+\subsection{Improved Find}\label{improved-find}}
+
+\begin{itemize}
+\tightlist
+\item
+  Idea: \emph{path compression}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    After we perform \passthrough{\lstinline!find(T t)!}, change
+    \passthrough{\lstinline!t!}'s parent to the root
+  \item
+    Subsequent calls to \passthrough{\lstinline!find(T t)!} (or any node
+    which is in the subtree rooted at \passthrough{\lstinline!t!}) will
+    be faster
+  \item
+    We can do the same thing to all the nodes from
+    \passthrough{\lstinline!t!} to the root
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Or\ldots{} we should at least do it for all the nodes that we
+      visit when we perform \passthrough{\lstinline!find(T t)!}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{improved-find-example}{%
+\subsection{Improved Find: Example}\label{improved-find-example}}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/1.png}
+\caption{Worst-case tree for \(N=16\)}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  Equal-sized trees when union'd together
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We call them \emph{binomial trees}
+  \end{itemize}
+\item
+  The blue circles trace \passthrough{\lstinline!find(14)!}
+\item
+  Then after performing path compression, we have the following tree
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/2.png}
+\caption{Path compression resulting from a
+\passthrough{\lstinline!find(14)!} on the previous figure}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  Notice how \passthrough{\lstinline!12!} and
+  \passthrough{\lstinline!14!} are now the direct children of
+  \passthrough{\lstinline!0!}, which would speed up subsequent
+  \passthrough{\lstinline!find!} operations that involve either them or
+  their children
+\end{itemize}
+
+\hypertarget{path-compression-in-union}{%
+\subsection{Path Compression in Union}\label{path-compression-in-union}}
+
+\begin{itemize}
+\tightlist
+\item
+  Note: for demonstration purposes, assume that we use a naive union and
+  start with a tall tree \(\{0,1,2,3\}\)
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.35\textwidth,height=\textheight]{images/3.png}
+\caption{A tall tree}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!union(2, 4)!}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Remember that \passthrough{\lstinline!find!} is invoked in calls to
+    \passthrough{\lstinline!union!}
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.35\textwidth,height=\textheight]{images/4.png}
+\caption{A tall tree after \passthrough{\lstinline!find!} is invoked as
+part of \passthrough{\lstinline!union(2, 4)!}}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  This update occurs after we do \passthrough{\lstinline!find(2)!}, as
+  an intermediate step during the execution of
+  \passthrough{\lstinline!union(2, 4)!}
+\item
+  We continue to improve the tree structure so that we have shallower
+  trees after every call to \passthrough{\lstinline!find!} or
+  \passthrough{\lstinline!union!}
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.35\textwidth,height=\textheight]{images/5.png}
+\caption{A tall tree after \passthrough{\lstinline!union(2, 4)!}
+completes}
+\end{figure}
+
+\hypertarget{complexity-analysis}{%
+\subsection{Complexity Analysis}\label{complexity-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  The analysis is a little different since our speed improves over time
+\item
+  Let \(n\) be the number of items and initial sets
+\item
+  For any sequence of \(m\) operations (\passthrough{\lstinline!union!}
+  or \passthrough{\lstinline!find!})
+\end{itemize}
+
+\begin{longtable}[]{cc}
+\toprule
+Implementation & Big-\(O\)\tabularnewline
+\midrule
+\endhead
+Set of sets & \(O(mn)\)\tabularnewline
+Quick find & \(O(mn)\)\tabularnewline
+Tree (naive) & \(O(mn)\)\tabularnewline
+Tree (rank union and naive find) & \(O(n + m\log(n))\)\tabularnewline
+Tree (naive union and path compression) &
+\(O(n + m\log(n))\)\tabularnewline
+Tree (rank union and path compression) &
+\(O(n + m\log(^* n))\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{itemize}
+\tightlist
+\item
+  \(log(^* n)\)?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    That's not a footnote!
+  \item
+    It's defined as the number of times once can apply \(n=\log(n)\)
+    until \(n\leq 1\)
+  \end{itemize}
+\item
+  Practically speaking, \(\log(^* n)\) is equivalent to a constant
+  (since it grows so slowly -- see the table below)
+\item
+  So rank union and path compression is approximately \(O(n+m)\) for
+  \(n\) items and \(m\) operations
+\end{itemize}
+
+\begin{longtable}[]{cc}
+\toprule
+\(n\) & \(\log(^* n)\)\tabularnewline
+\midrule
+\endhead
+\(1\) & \(0\)\tabularnewline
+\((1,2]\) & \(1\)\tabularnewline
+\((2,4]\) & \(2\)\tabularnewline
+\((4,16]\) & \(3\)\tabularnewline
+\((16,65536]\) & \(4\)\tabularnewline
+\((65536,2^{65536}]\) & \(5\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{rank-union-variations}{%
+\subsection{Rank Union Variations}\label{rank-union-variations}}
+
+\begin{itemize}
+\tightlist
+\item
+  Union-by-size: attach the smaller of the trees to the larger of the
+  two
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We keep the root of the bigger tree
+  \item
+    Easier when used in conjunction with path compression
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Otherwise it's harder tot rack the height
+    \end{itemize}
+  \end{itemize}
+\item
+  Union-by-height: attach the shorter tree to the taller one
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We keep the root of the taller tree
+  \item
+    Easier to use when used alone (that means without path compression)
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth,height=\textheight]{images/6.png}
+\caption{Union-by-size vs.~union-by-height}
+\end{figure}
+
+\hypertarget{building-a-maze-example-and-blob-detection-example-omitted}{%
+\subsubsection{Building A Maze Example and Blob Detection Example
+omitted}\label{building-a-maze-example-and-blob-detection-example-omitted}}
+
+\hypertarget{summary-union-find}{%
+\subsection{Summary: Union Find}\label{summary-union-find}}
+
+\begin{itemize}
+\tightlist
+\item
+  A collection of disjoint sets
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \passthrough{\lstinline!find(T t)!} returns the set that
+    \passthrough{\lstinline!t!} belongs to
+  \item
+    \passthrough{\lstinline!union(T i, T j)!} merges the sets
+    \passthrough{\lstinline!i!} and \passthrough{\lstinline!j!} belong
+    to
+  \end{itemize}
+\item
+  Implementations
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Naive
+  \item
+    Union by rank
+  \item
+    Path compression
+  \item
+    Close to linear complexity for the most efficient approaches
+  \end{itemize}
+\item
+  Applications
+\item
+  Mazes
+\item
+  MST
+\item
+  NCA
+\item
+  Vision: blob detection
+\end{itemize}
+
+\end{document}
