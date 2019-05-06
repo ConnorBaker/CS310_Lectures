@@ -18,8 +18,8 @@ footer-right: \thepage\ of \pageref{LastPage}
 header-right: "2019-05-06"
 header-includes:
   - \setcounter{page}{0} # So that the titlepage is the zeroth page
-  - \lstset{breaklines=true}
-  - \lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{blue}\hookrightarrow\space}}}
+#   - \lstset{breaklines=true}
+#   - \lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{blue}\hookrightarrow\space}}}
   - \usepackage{datetime}
   - \settimeformat{ampmtime}
   - \usepackage{lastpage}
@@ -113,19 +113,19 @@ People are (somewhat) uniquely identifiable by their full names, which are in tu
 
 47. Hash [strings | numbers | cards | people] into a hash table of size [some number using [separate chaining | open addressing w/ linear probing | open addressing w/ quadratic probing | open addressing w/ double hashing where `h2(key) = 5 - (key % 5)`] and the hash function you wrote above.
 
-**Omitted.**
+*Omitted.*
 
 48. After hashing the above [strings | numbers | cards | people] remove three of them, making sure to visually indicate any special states.
 
-**Omitted.**
+*Omitted.*
 
 49. Rehash your tables above to [a prime number over double the size].
 
-**Omitted.**
+*Omitted.*
 
 50. Write code for an [add | remove | contains | rehash | getLoad] method in a hash table which uses [separate chaining | open addressing with linear probing | open addressing with quadratic probing | open addressing with double hashing where `h2(key) = 7 - (key % 7)`].
 
-**Omitted.**
+*Omitted.*
 
 51. Explain how Java [String | Integer | Double | Character] class produces hash codes.
 
@@ -336,18 +336,98 @@ Assume that all vertices have a unique number identifying them. Then we have an 
 
 ![A comparison of features between undirected and directed graphs](images/1.png){ width=50% }
 
+This approach is beneficial when you have memory to spare and want $O(1)$ lookups.
+
 #### Adjacency List
 
 An adjacency list would be a list of vertices where every vertex points to a list of vertices that it is predecessor of.
 
+This approach is beneficial when you don't have a lot of memory and are okay with $O(n)$ lookups.
 
 54. Given a graph, draw the corresponding adjacency [matrix | list]. Given an adjacency [matrix | list], draw the corresponding graph.
 
-**Omitted.**
+*Omitted.*
 
 ### Graph Algorithms
 
 55. Given a graph and a starting location, perform a [breadth-first | depth-first] traversal showing the steps of the accompanying [queue | stack] data structure. Given a choice of neighbors, chose nodes in numerical order.
+
+#### Breadth-First Traversal
+
+Taken from notes on 2019-03-26.
+
++ Given the starting point $S$
+  + Visit all the nodes that are one edge away ($S$'s direct neighbors)
+  + Visit all nodes that are two edges away (neighbors of neighbors)
+  + Visit all nodes that are three edges away (neighbors of neighbors of neighbors)
+  + ...
+  + Repeat this until all nodes have been visited
+
+##### Example
+
+![A simple undirected graph](images/2.png){ width=50% }
+
++ A breadth-first traversal starting with $0$: $\{0\}$
+  + Visit all the nodes adjacent to $0$: $\{0, 1, 2, 3\}$
+  + Visit all the neighbors of those nodes: $\{0, 1, 2, 3, 4, 6\}$
+  + Continue the process: $\{0, 1, 2, 3, 4, 6, 5\}$
+  + We've reached all the nodes, so we can stop. We've also found that every node in this graph can be reached by a path of at most length $3$.
+
+##### Implementation
+
++ Have we done something similar to this before?
+  + Yes, and depending on your progress in Project 3 you might still be doing it.
++ We can use a queue
+  + Initialize by enqueueing the starting vertex
+  + Mark it as visited when we enqueue
+  + Process the vertives in a first-in first-out (FIFO) order:
+    + Dequeue the first vertex $v$
+    + Enqueue $v$'s neighbor that has not yet been visited or marked
+
+#### Depth-First Traversal
+
++ Given the starting point $S$
+  + Visit the first neighbor of $S$
+  + Visit the first neighbor of the first neighbor of $S$
+  + Visit the first neighbor fo the first neighbor of the first neighbor of $S$
+  + Repeat this process until there are no more nodes to go, then back, trying the second neighbor of $S$
+  + Repeat that process until we've processed all of the neighbors of $S$
+
+##### Example
+
+![A simple undirected graph](images/2.png){ width=50% }
+
+A depth-first traversal starting with $0$: $\{0\}$
+
+Pick one neighbor of $0$: $1$. Then the set of nodes visited is $\{0, 1\}$.
+
++ Pick one neighbor of $1$: $4$. Then the set of nodes visited is $\{0, 1, 4\}$.
+  + Pick one neighbor of $4$: $3$. Then the set of nodes visited is $\{0, 1, 4, 3\}$.
+    + Pick one neighbor of $3$: $2$. Then the set of nodes visited is $\{0, 1, 4, 3, 2\}$.
+      + Pick one neighbor of $2$: $2$ has no neighbors that we haven't visited already, so we backtrack to $3$.
+    + Pick one neighbor of $3$: $3$ has no neighbors that we haven't visited already, so we backtrack to $4$. Then the set of nodes visited is $\{0, 1, 4, 3, 2\}$.
+  + Pick one neighbor of $4$: $5$. Then the set of nodes visited is $\{0, 1, 4, 3, 2, 5\}$.
+    + Pick one neighbor of $5$: $6$. Then the set of nodes visited is $\{0, 1, 4, 3, 2, 5, 6\}$.
+      + Pick one neighbor of $6$: $6$ has no neighbors that we haven't visited already, so we backtrack to $5$.
+    + Pick one neighbor of $5$: $5$ has no neighbors that we haven't visited already, so we backtrack to $4$.
+  + Pick one neighbor of $4$: $4$ has no neighbors that we haven't visited already, so we backtrack to $1$.
++ Pick one neighbor of $1$: $1$ has no neighbors that we haven't visited already, so we backtrack to $0$.
+  
+Pick one neighbor of $0$: $0$ has no neighbors that we haven't visited already, and we cannot backtrack further, so we're done.
+
+Therefore, our result is $\{0, 1, 4, 3, 2, 5\}$.
+
+##### Implementation
+
++ Implementation qualms:
+  + How do we implement backtracking?
+    + With recursion, or equivalently, a stack
+  + Is a post-order tree traversal depth-first when applied to graphs? What about a pre-order traversal? What about an in-order traversal?
++ Using recursion (or a stack)
+  + We push nodes with unvisited neighbors onto the stack
+  + Pick an unvisited neighbor to continue
+    + If there are no more unvisited neighbors, pop out the node and backtrack
+
 56. Write code for a recursive depth-first search. Assume you are given an adjacency matrix `m (int[][])`, the `id` of a node to start from, and an `id` of a node to search for. This should return `true`/`false` depending on if one can get to the search target from the starting node.
 57. Given a graph and a source node id, perform Dijkstra's shortest path algorithm on a given graph showing the steps. Use a table to track the current status, distance, and parent pointer for each node.
 
