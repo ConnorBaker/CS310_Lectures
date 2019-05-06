@@ -280,6 +280,39 @@ Since a character is just an ASCII values, it's essentially calling the `Integer
 ### Graphs
 
 52. Explain the following terms: graph, node, edge, adjacent to, directed edge, weight, $|V|$, $|E|$, path, simple path, path length, cycle, degree/indegree/outdegree of a vertex, DAG.
+
+**Graph**: The set $G = (V, E)$ where $V$ is set of vertices and $E$ is the set of edges.
+
+**Node**: Synonymous with vertex.
+
+**Edge**: A pair $(v,w)\in V$.
+
+**Adjacency**: A vertex $v$ is said to be *adjacent* to a vertex $w$ if and only if there exists an edge $(v,w)\in E$.
+
+**Directed edge**: An edge which has direction. By the definition of a graph, all edges are directed (because they're tuples).
+
+**Weight**: We can consider an edge to have a weight (image the cost of a flight between two cities).
+
+**$|V|$**: The cardinality of the set of vertices -- that is, the number of vertices in the graph.
+
+**$|E|$**: The cardinality of the set of edges -- that is, the number of edges in the graph.
+
+**Path**: A path $\pi$ is a non-zero length sequence of edges $\{(v_0, v_1), (v_1, v_2), \dots (v_{n-1}, v_n)\}$ which connects two vertices.
+
+**Simple path**: A path where all the vertices are distinct, except possibly the first and last.
+
+**Path length**: The length of a path.
+
+**Cycle**: A path which leads to back to its starting vertex.
+
+**Degree**: The in-degree plus the out-degree..
+
+**In-degree**: The number of edges coming into a vertex.
+
+**Out-degree**: The number of edges leaving a vertex.
+
+**Directed Acyclic Graph (DAG)**: A directed graph without cycles.
+
 53. Explain the difference between the following types of graphs: directed/undirected, weighted/unweighted, cyclic/acyclic, dense/sparse, connected/disconnected.
 54. Explain the two ways to store a graph we covered in class. When would you want to use which?
 55. Given a graph, draw the corresponding adjacency [matrix | list]. Given an adjacency [matrix | list], draw the corresponding graph.
