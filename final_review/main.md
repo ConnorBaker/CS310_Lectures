@@ -79,9 +79,9 @@ Well there aren't really *three* different types of probing -- rather, there's t
 
 #### Separate Chaining
 
-The benefit of using separate chaining is that collisions just turn into insertions into some data structure (whether it be a binary tree, another `HashMap`, or something else entirely). Generally separate chaining is preferred. However, that means we need to maintain a separate data structure, have another level of indirection, and adding elements to the data structure may require resizing. 
+The benefit of using separate chaining is that collisions just turn into insertions into some data structure (whether it be a binary tree, another `HashMap`, or something else entirely). Generally separate chaining is preferred. However, that means we need to maintain a separate data structure, have another level of indirection, and adding elements to the data structure may require resizing.
 
-Additionally operations like `add(T t)`, `remove(T t)`, and `contains(T t)` have an upper bound of $O(\log(n))$ since we must search whatever data structure we're using for each entry in the hash table. (Using a second `HashMap` keeps the amortized cost at $O(1)$, while using a binary search tree introduces a cost of $O(\log(n))$, for example). 
+Additionally operations like `add(T t)`, `remove(T t)`, and `contains(T t)` have an upper bound of $O(\log(n))$ since we must search whatever data structure we're using for each entry in the hash table. (Using a second `HashMap` keeps the amortized cost at $O(1)$, while using a binary search tree introduces a cost of $O(\log(n))$, for example).
 
 In class we used a linked list as the secondary data structure, which was kind of silly -- sure it can grow infinitely and is an easy visual to grasp, but the efficiency just isn't there for the operations that we need (fast `add(T t)`, `remove(T t)`, and `contains(T t)`). For Big-$O$ analysis with separate chaining and linked lists, see my notes from February 28, page 3.
 
@@ -99,9 +99,18 @@ which yields a very steep exponential growth curve for the number of cells check
 
 Quadratic probing still needs to use tombstones. However, it doesn't suffer from primary clustering since it checks a more dispersed group of cells. The complexity of quadratic probing isn't known.
 
-A major benefit to use quadratic probing is that if the table size is prime and the load factor stays been $0.5$, you are guaranteed to be able to insert and item. Additionally, we get the property that no cell is probed twice.
+A major benefit to use quadratic probing is that if the table size is prime and the load factor stays been 0.5, you are guaranteed to be able to insert and item. Additionally, we get the property that no cell is probed twice.
 
 46. Create a hash function for [strings | numbers | cards | people] which generates relatively unique values.
+
+The wizened people of Oracle have decided on a polynomial hash using base 31, and I see no reason to change the status quo.
+
+Numbers are their own hash functions.
+
+There are 52 cards in a deck, so create a bijection between the cards and the set $\{1, 52\}$. Then the problem reduces to the previous problem involving numbers.
+
+People are (somewhat) uniquely identifiable by their full names, which are in turn strings, so this problem reduces to the first involving strings.
+
 47. Hash [strings | numbers | cards | people] into a hash table of size [some number using [separate chaining | open addressing w/ linear probing | open addressing w/ quadratic probing | open addressing w/ double hashing where `h2(key) = 5 - (key % 5)`] and the hash function you wrote above.
 48. After hashing the above [strings | numbers | cards | people] remove three of them, making sure to visually indicate any special states.
 49. Rehash your tables above to [a prime number over double the size].
