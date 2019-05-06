@@ -42,6 +42,35 @@
 ### Hashing (Post-Midterm)
 
 45. Compare and contrast the three types of probing we covered for open addressing. Make sure to note the benefits and disadvantages of each.
+
+Well there aren't really *three* different types of probing -- rather, there's three ways that we can handle collisions. We have separate chaining and open addressing. Open addressing in turn has two different ways of handling collisions, linear probing and quadratic probing. As a chart, we'd have
+
+1. Separate Chaining
+2. Open Addressing
+    1. Linear probing
+    2. Quadratic probing
+
+#### Separate Chaining
+
+The benefit of using separate chaining is that collisions just turn into insertions into some data structure (whether it be a binary tree, another `HashMap`, or something else entirely). Generally separate chaining is preferred. However, that means we need to maintain a separate data structure, have another level of indirection, and adding elements to the data structure may require resizing. 
+
+Additionally operations like `add(T t)`, `remove(T t)`, and `contains(T t)` have an upper bound of $O(\log(n))$ since we must search whatever data structure we're using for each entry in the hash table. (Using a second `HashMap` keeps the amortized cost at $O(1)$, while using a binary search tree introduces a cost of $O(\log(n))$, for example). 
+
+In class we used a linked list as the secondary data structure, which was kind of silly -- sure it can grow infinitely and is an easy visual to grasp, but the efficiency just isn't there for the operations that we need (fast `add(T t)`, `remove(T t)`, and `contains(T t)`). For Big-$O$ analysis with separate chaining and linked lists, see my notes from February 28, page 3.
+
+#### Open Addressing
+
+Linear and quadratic probing search for the next available space in a hash table instead of creating a data structure to handle collisions. As an example, if slot $5$ is filled, linear probing will check the sequence $\{5+1, 5+2, 5+3, 5+4, 5+5, \dots\} = \{6, 7, 8, 9, 10, \dots\}$ and so on, while quadratic probing will check $\{5+1, 5+2^2, 5+3^2, 5+4^2, 5+5^2, \dots\} = \{6, 9, 14, 21, 30, \dots\}$.
+
+This introduces a need to use tombstones, markers on each entry that indicate whether it has been removed or not, so that we avoid removing entries which are in search chains.
+
+Linear probing suffers from primary clustering since it continually searches within a small neighborhood of cells. Additionally, it has a load of
+$$
+\frac{1}{2} \left(1 + \frac{1}{(1 - load)^2} \right)
+$$
+which yields a very steep exponential growth curve for the number of cells checked during an insertion, with respect to the load.
+
+
 46. Create a hash function for [strings | numbers | cards | people] which generates relatively unique values.
 47. Hash [strings | numbers | cards | people] into a hash table of size [some number using [separate chaining | open addressing w/ linear probing | open addressing w/ quadratic probing | open addressing w/ double hashing where `h2(key) = 5 - (key % 5)`] and the hash function you wrote above.
 48. After hashing the above [strings | numbers | cards | people] remove three of them, making sure to visually indicate any special states.
