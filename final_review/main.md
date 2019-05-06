@@ -429,9 +429,104 @@ Therefore, our result is $\{0, 1, 4, 3, 2, 5\}$.
     + If there are no more unvisited neighbors, pop out the node and backtrack
 
 56. Write code for a recursive depth-first search. Assume you are given an adjacency matrix `m (int[][])`, the `id` of a node to start from, and an `id` of a node to search for. This should return `true`/`false` depending on if one can get to the search target from the starting node.
+
+*Omitted.*
+
 57. Given a graph and a source node id, perform Dijkstra's shortest path algorithm on a given graph showing the steps. Use a table to track the current status, distance, and parent pointer for each node.
 
-### Graph Algorithms (Prof. Russel's section only) -- Omitted
+#### Example of Dijkstra's Algorithm
+
+Taken from notes on 2019-03-28.
+
+Suppose we want to find the shortest path given the following graph, and starting at vertex $0$.
+
+![A weighted, undirected graph](images/3.png){ width=50% }
+
+<center>
+
+Node        | 0 |    1    |    2    |    3    |    4    |    5    |    6    |
+:---------: |:-:|   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
+Path Length | 0 |$\infty$ |$\infty$ |$\infty$ |$\infty$ |$\infty$ |$\infty$ |
+Prev        | 0 |    -    |    -    |    -    |    -    |    -    |    -    |
+
+</center>
+
++ Starting vertex $0$
+  + Updating for vertices $1$, $2$, and $3$
++ Paths: $\{\}$
+
+<center>
+
+Node        | 0 |    1    |    2    |    3    |    4    |    5    |    6    |
+:---------: |:-:|   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
+Path Length | 0 |    1    |    1    |    3    |$\infty$ |$\infty$ |$\infty$ |
+Prev        | 0 |    0    |    0    |    0    |    -    |    -    |    -    |
+
+</center>
+
++ Next vertex $1$
+  + Updating for vertices $4$ and $6$
++ Paths: $\{0, 1\}$
+
+<center>
+
+Node        | 0 |    1    |    2    |    3    |    4    |    5    |    6    |
+:---------: |:-:|   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
+Path Length | 0 |    1    |    1    |    3    |    3    |$\infty$ |    8    |
+Prev        | 0 |    0    |    0    |    0    |    1    |    -    |    1    |
+
+</center>
+
++ Next vertex $2$
+  + Updating for vertex $3$
++ Paths: $\{0, 1\}, \{0, 2\}$
+
+<center>
+
+Node        | 0 |    1    |    2    |    3    |    4    |    5    |    6    |
+:---------: |:-:|   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
+Path Length | 0 |    1    |    1    | ~~3~~ 2 |    3    |$\infty$ |    8    |
+Prev        | 0 |    0    |    0    | ~~0~~ 2 |    1    |    -    |    1    |
+
+</center>
+
++ Next vertex $3$
+  + Updating for vertex $3$
+    + Reached every node, update nothing
++ Paths: $\{0, 1\}, \{0, 2\}, \{0, 2, 3\}$
+
+<center>
+
+Node        | 0 |    1    |    2    |    3    |    4    |    5    |    6    |
+:---------: |:-:|   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
+Path Length | 0 |    1    |    1    | ~~3~~ 2 |    3    |    4    | ~~8~~ 5 |
+Prev        | 0 |    0    |    0    | ~~0~~ 2 |    1    |    4    | ~~1~~ 5 |
+
+</center>
+
++ Next vertex $4$
+  + Updating for vertex $5$
++ Paths: $\{0, 1\}, \{0, 2\}, \{0, 2, 3\}, \{0, 1, 4\}, \{0, 1, 4, 5\}, \{0, 1, 4, 5, 6\}$
+
+Our final record is then
+
+<center>
+
+Node        | 0 |    1    |    2    |    3    |    4    |    5    |    6    |
+:---------: |:-:|   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
+Path Length | 0 |    1    |    1    | ~~3~~ 2 |    3    |    4    | ~~8~~ 5 |
+Prev        | 0 |    0    |    0    | ~~0~~ 2 |    1    |    4    | ~~1~~ 5 |
+
+</center>
+
++ Prev: the previous node in the shortest path starting from $0$
++ Path length: length of the corresponding shortest path
++ What data structure would we use for implementing something like this?
+  + A priority queue
+
+### Graph Algorithms (Prof. Russel's section only)
+
+*Omitted.*
 
 ### Priority Queues/ Heaps
 
