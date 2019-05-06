@@ -125,7 +125,7 @@ People are (somewhat) uniquely identifiable by their full names, which are in tu
 
 50. Write code for an [add | remove | contains | rehash | getLoad] method in a hash table which uses [separate chaining | open addressing with linear probing | open addressing with quadratic probing | open addressing with double hashing where `h2(key) = 7 - (key % 7)`].
 
-*Omitted.*
+*Omitted -- see textbook.*
 
 51. Explain how Java [String | Integer | Double | Character] class produces hash codes.
 
@@ -430,7 +430,7 @@ Therefore, our result is $\{0, 1, 4, 3, 2, 5\}$.
 
 56. Write code for a recursive depth-first search. Assume you are given an adjacency matrix `m (int[][])`, the `id` of a node to start from, and an `id` of a node to search for. This should return `true`/`false` depending on if one can get to the search target from the starting node.
 
-*Omitted.*
+*Omitted -- see textbook.*
 
 57. Given a graph and a source node id, perform Dijkstra's shortest path algorithm on a given graph showing the steps. Use a table to track the current status, distance, and parent pointer for each node.
 
@@ -533,8 +533,80 @@ Prev        | 0 |    0    |    0    | ~~0~~ 2 |    1    |    4    | ~~1~~ 5 |
 *NB: The numbering in the PDF I'm following is weird -- it's not me.*
 
 56. What are the common operations supported by a priority queue?
+
+      + `add(T t, int p)` and `enqueue(T t, int p)`: enqueue item `t` with priority `p`
+      + `peek()` and `findMin()`: return the object with the best priority
+        + Per convention, lower is better
+        + Symmetric code if higher is better
+      + `dequeue()` and `deleteMin()`: remove and return the object with the best priority
+
 57. Compare and contrast different data structures we covered in class to implement a priority queue.
+
+#### General Performance of Different Implementations
+
+Data Structure     | `enqueue(T t, int p)`   | `peek()`$^*$      | `dequeue()`$^*$   | Notes
+:-------------:    | :--------------: | :--------:    | :----------:  | :------:
+Unsorted List      | $O(1)$           | $O(n)$        | $O(n)$        | best priority can be any location
+Sorted Array       | $O(n)$           | $O(1)$        | $O(1)$        | best priority at high index
+Sorted Linked List | $O(n)$           | $O(1)$        | $O(1)$        | best at head or tail
+Multiple Queues    | $O(1)$           | $O(m)$        | $O(m)$        | -
+Binary Search Tree | $O($height$)$    | $O($height$)$ | $O($height$)$ | min at left-most
+
++ $^*$: assuming best priority
++ $n$: the number of items in a queue
++ $m$: the number of priority levels
+
+#### Unsorted List
+
++ Pros
+  + Easy to maintain/implement
+  + Very fast `enqueue` time
++ Cons
+  + The best priority can be anywhere so it takes $O(n)$ time to find it
+  + Relatively slow `peek` and `dequeue` operations
+  + Fixed size, though we can copy to a new, larger array (which requires a fair deal of memory to hold both the new and the old arrays at the ready)
+
+#### Sorted Array
+
++ Pros
+  + Easy to implement
+  + Very fast `peek` and `dequeue` operations
+  + Best priority at the highest index
++ Cons
+  + Very slow `enqueue` operation time
+  + Memory intensive -- lots of reshuffling and re-assignment
+  + Fixed size, though we can copy to a new, larger array (which requires a fair deal of memory to hold both the new and the old arrays at the ready)
+
+#### Sorted Linked List
+
++ Pros
+  + Easy to maintain/implement
+  + Very fast `peek` and `dequeue` operations
+  + Can grow infinitely large
+  + Best priority at the `head` or `tail` of the linked list
++ Cons
+  + Insertion is slower because we need to traverse a list so it takes $O(n)$
+
+#### Multiple Queues
+
++ Pros
+  + Fast `enqueue`
+  + Relatively fast `peek` and `dequeue`
++ Cons
+  + Difficult to maintain/implement
+
+#### Binary Search Tree
+
++ Pros
+  + Every operation takes $O(\log_2($height$))$ time
++ Cons
+  + Difficult to maintain/implement
+  + The minimum or maximum priority are at the leftmost or rightmost leaf, respectively
+
 58. Write the code to [enqueue | dequeue] from a priority queue stored as [a sorted dynamic array | an unsorted linked list | a heap]. Make sure to maintain the optimal Big-O for the given queue storage.
+
+*Omitted -- see textbook.*
+
 59. How can you determine the [min | max] value in a heap? Show the steps to remove the [min | max] value from the heap. Show the steps to insert a value into a heap and keep the heap order.
 60. Given an array representation of binary heap, show the corresponding tree structure. Given a binary heap tree representation, show the corresponding array assuming root is at index [0|1].
 61. What is the difference between "delete" in a heap and "delete" in other types of trees we discussed in class?
