@@ -1,0 +1,487 @@
+% Declare type of document
+\documentclass[10pt]{article}
+
+% Import Packages
+\usepackage[utf8]{inputenc} 
+
+% Commonly used math symbols and fonts
+\usepackage[mathscr]{euscript}
+\usepackage{amsfonts,amsmath,amssymb,amsthm}
+\usepackage{mathtools,mathdots}
+
+% Better looking default font
+\usepackage{lmodern}
+
+% itemize environment
+\usepackage{enumitem}
+
+% Array, longtable, and booktabs
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+ 
+% Caption package for hiding Figure #
+\usepackage{caption}
+
+% Use multiple column environments
+\usepackage{multicol}
+
+% Page formatting
+% \usepackage[letterpaper, margin=1in,left=0.5in,right=0.5in]{geometry}
+\usepackage[letterpaper, margin=1in]{geometry}
+% Package for nice syntax highlighting for code
+% \usepackage[cache=false]{minted}
+\usepackage{minted} 
+
+% Allows line breaks in the math environment
+\allowdisplaybreaks
+
+
+
+
+
+
+
+\usepackage{datetime}
+\settimeformat{ampmtime}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Midterm Review (Connor Baker)}
+\rhead{Dr. Zhong S001-CS310}
+\lfoot{Compiled on \today\ at \currenttime} 
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+
+
+
+
+
+
+\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
+\microtypecontext{spacing=nonfrench}
+% activate={true,nocompatibility} - activate protrusion and expansion
+% final - enable microtype; use "draft" to disable
+% tracking=true, kerning=true, spacing=true - activate these techniques
+% factor=1100 - add 10% to the protrusion amount (default is 1000)
+% stretch=10, shrink=10 - reduce stretchability/shrinkability (default is 20/20)
+
+\title{CS 310: Midterm Review}
+\author{Connor Baker}
+\date{February 27, 2019}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\thispagestyle{empty}
+
+\pagebreak
+
+\setcounter{page}{1}
+
+\section{Reading List}
+\begin{itemize}
+    \item Big-$O$
+    \begin{itemize}
+        \item Chapter 5: Algorithm Analysis.
+        \item Section 5.3: You are not required to be able to prove the theorems, but you need to understand them.
+    \end{itemize}
+    \item Lists
+    \begin{itemize}
+        \item Section 6.1-6.3, 6.5: General Lists.
+        \item Chapter 15: Dynamic Array / Array List and Iterator.
+        \item Chapter 17: Linked List.
+        \item Section 6.6: Stack/Queue Concepts.
+        \item Chapter 16.1-16.3: Stack/Queue Implementation.
+    \end{itemize} 
+    \item Trees:
+    \begin{itemize}
+        \item Section 18.1: Tree Basics, Binary trees.
+        \item Section 7.1-7.3: Recursion.
+        \item Section 18.3-18.4: Tree Recursions, Tree Traversals.
+    \end{itemize}
+    \item Hashing:
+    \begin{itemize}
+        \item Section 20.1-2: Hashing Basics and Hash Functions.
+        \item Section 20.5: Separate Chaining.
+    \end{itemize}
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\pagebreak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Sample Questions}
+\subsection{Big-$O$}
+\begin{enumerate}[leftmargin=0em]
+    \item What are the two types of complexity we discussed in class for assessing algorithms? Give an example of trading off one for the other using a data structure discussed in CS310.
+    \item Explain time/space complexity using a real life example (like the time complexity examples we did in class).
+    \item Convert the following functions to Big-$O$:
+    \begin{enumerate}
+        \item $10n + O(\log(n))$
+        \item $0.25n! + 2n$
+        \item $1+2+3$ 
+        \item $5 \log(n)$
+        \item $\log(n^2) + 100$ 
+    \end{enumerate}
+    \item For all the code you write for other problems in this review, compute
+    \begin{enumerate}
+        \item the function which describes the time your function will take to run;
+        \item the Big-$O$ of the function.
+    \end{enumerate}
+    Make sure to state what your variables mean (e.g. ``what is $n$?").
+    \item If I stated that the Big-$O$ of a method was $O(1)$ and that it also contained a loop, describe that loop.
+    \item What's the difference between ``best case", ``worst case", and ``average case" Big-$O$?
+    \item Explain the formal definition of Big-$O$: $T(n) \in O(F(n))$ if there are positive constants $c$ and $n_0$ such that, when $n \geq n_0, T(n) \leq cF(n)$.
+\end{enumerate}
+
+
+\subsection{Lists}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{7}
+    \item Explain the difference between a dynamic array list and a linked list.
+    \item Compare and contrast singly and doubly linked lists, including the pros and cons of using them.
+    \item Explain the difference between a ``node" class and a ``linked list" class. Include in your description the terms: node, next, value, head, and tail.
+    \item Explain what the memory looks like for a list stored as a [static array \vline\  dynamic array \vline\ linked list].
+    
+    Make sure to represent the memory needed to store additional helper variables (such as size, head, etc.).
+    \mintinline{java}{}
+    \item Write the code to perform [\mintinline{java}{set()} \vline\ \mintinline{java}{get()} \vline\ \mintinline{java}{add()} \vline\ \mintinline{java}{append()} \vline\ \mintinline{java}{insert()} \vline\ \mintinline{java}{remove()} \vline\ \mintinline{java}{contains()} \vline\ \mintinline{java}{indexof()}] for a [dynamic array list \vline\ singly linked list \vline\ doubly linked list].
+    \item Explain why we say that the worst case Big-$O$ of appending to a dynamic array list is $O(n)$ while its amortized cost is only $O(1)$.
+    \item Given an array representing a list, write the code to convert it into the equivalent linked list.
+    \item Write the code to perform an [insertion \vline\ selection] sort on a singly linked list (with optimal Big-$O$).
+    \item Describe how you make a class ``iterable" in Java.
+    \begin{enumerate}
+        \item What interfaces do you need? What methods are required by those interfaces?
+        \item Are there any additional optional methods?
+    \end{enumerate} 
+    \item Write code to implement a basic iterator for a(n) [array \vline\ linked list] and show how the iterator would be used.
+\end{enumerate}
+
+\subsection{Queues and Stacks}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{17}
+    \item Explain the difference between a queue and a stack.
+    \item If we add \mintinline{java}{'a', 'b', 'c', 'd'} onto a stack and invoke \mintinline{java}{pop()}, what will be returned? 
+    \item If we add \mintinline{java}{'a', 'b', 'c', 'd'} into a queue and invoke \mintinline{java}{dequeue()}, what will be returned?
+    \item Explain how to implement a [queue \vline\ stack] with a [singly \vline\ doubly] linked list with the optimal Big-$O$? Which end(s) should you insert/remove from for the optimal Big-$O$?
+    \item Explain how to store a stack in an array with the optimal Big-$O$.
+    \item Explain how a circular queue works for storing a queue in an array.
+    \item Given a series of adds and removes into a [stack \vline\ queue] stored in a(n) [array \vline\ singly linked list \vline\ doubly linked list], draw a representation of the resulting memory.
+    
+    Remember to include any additional storage you need for helper variables such as size, top, etc.
+    \item Write the code to perform [add \vline\ remove \vline\ isEmpty \vline\ peek] for a [queue \vline\ stack].
+\end{enumerate}
+
+\subsection{Trees}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{25}
+\item Explain the following terms: trees, root, descendants, ancestors, leaves, siblings, parent, child, depth, node height, tree height, full tree, (nearly) complete tree, perfect tree, balanced tree.
+\item Given a tree, identify the [root \vline\ leaves \vline\ tree height \vline\ tree size]. Given a tree, label each node with its [depth \vline\ height]. Given a tree, identify if it is [full \vline\ (nearly) complete \vline\ perfect \vline\ balanced].
+\item Explain how to store a binary tree using an [array \vline\ linked structure]. 
+\begin{enumerate}
+    \item For an array, explain how to find the child/parent of a given node based only on the index of that element.
+    \item For a linked structure, write the code for a node.
+\end{enumerate} 
+Can you generalize the idea to $k$-ary trees?
+\item Write a recursive method to calculate the [size \vline\ height] of a tree.
+\item Given a tree, perform a [pre-order \vline\ post-order \vline\ in-order \vline\ level-order] walk of the tree, printing
+the nodes.
+\item Write code for a recursive [pre-order \vline\ post-order \vline\ in-order] tree traversal of a binary tree that prints the node values out. Assume a generic \mintinline{java}{Node<T>} class with a data field and a array of node children.
+\end{enumerate}
+
+\subsection{Hashing}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{31}
+\item What is the goal of hashing? (i.e. Why would we want to hash something into a hash table?)
+\item Explain the difference between a hash code, a hash function, and a hash table. How does a hash code differ from the index of a hash table?
+\item Create a hash function for [strings \vline\ numbers \vline\ cards \vline\ people] which generates relatively unique values.
+\item Explain Java's hash-contract and why it is necessary.
+\item Explain the idea of "load" on a table and how it relates to the big-O of the hash table's [\mintinline{java}{add()} | \mintinline{java}{remove()} \vline\ \mintinline{java}{contains()}] methods.
+\item Hash [strings \vline\ numbers \vline\ cards \vline\ people] into a hash table of size [some number] using separate chaining and the hash function you wrote above.
+\item Rehash your tables above to [a prime number over double the size].
+\item Write code for an [\mintinline{java}{add()} \vline\ \mintinline{java}{remove()} \vline\ \mintinline{java}{contains()} \vline\ \mintinline{java}{rehash()} \vline\ \mintinline{java}{getLoad()}] method in a hash table which uses
+separate chaining.
+\end{enumerate}
+
+\subsection{General Programming and Java Specific}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{39}
+\item In Java, what is the Big-$O$ of concatenating two string with \mintinline{java}{+}  operator? Assume $n$ is the length of the first string and $m$ is the length of the second string.
+\item Explain how to define a generic class in Java and why it is useful for data structures.
+\item Explain recursion to someone who has never heard of it before. Make sure your answer includes the following terms: base case, recursive case, readability, efficiency, and iteration.
+\item Given an iterative function, write the same function using recursion. Given a recursive function, write the same function using iteration.
+\item Explain how you can walk backward in a singly linked list using either recursion or a stack. Why does recursion work without needing to make your own stack?
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+\pagebreak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Sample Answers}
+\subsection{Big-$O$}
+\begin{enumerate}[leftmargin=0em]
+    \item We discussed both time and space complexity (we also discussed implementation complexity).
+    
+    There is an inherent tradeoff between the speed with which an algorithm operates and its memory usage. As an example, a dequeue allows for $O(1)$ insertion at both ends of the structure, but it is typically implemented using a linked list which has a large memory footprint.
+    \item Suppose you're baking a cake, but you have a tiny kitchen. It would be faster to put all the ingredients you need out on the counter and prepare everything at once, but you don't have the counter-space to do it.
+    
+    As a result, you're forced to go to the fridge every single time you need something -- the available counter-space (memory) directly affects how many time-wasting trips you'll need to make to the fridge (which is analogous to wasting CPU cycles because the processor has to fetch or calculate something before it can resume the algorithm).
+    \item Convert the following functions to Big-$O$:
+    \begin{enumerate}
+        \item $O(n)$ since $O(n) > O(\log(n))$
+        \item $O(n!)$ since $O(n!) > O(n)$
+        \item $O(c)$ since $aO(c) \in O(c)$, when $a\in\mathbb{R}$
+        \item $O(\log(n))$ since $a\cdot O(\log(n)) \in O(\log(n))$, when $a\in\mathbb{R}$
+        \item $O(\log(n))$ since $O(\log(n^2)) + O(100) = O(2\log(n)) + O(c) \in O(\log(n))$
+    \end{enumerate}
+    \item For all the code you write for other problems in this review, compute
+    \begin{enumerate}
+        \item the function which describes the time your function will take to run;
+        \item the Big-$O$ of the function.
+    \end{enumerate}
+    Make sure to state what your variables mean (e.g. ``what is $n$?").
+    \item The number of iterations of the loop is invariant with respect to the surrounding method; that is to say that it executes a fixed number of times.
+    \item A best case scenario is one in which the state of an object is such that it causes the method to execute as quickly as possible. An example would be finding the element you were looking for at the head of a linked list, which means that you avoid traversing the entire list.
+
+    A worst case scenario is the opposite of a best case scenario. An example would be finding the element you were looking for at the end of a linked list, having made you traverse the entirety of the list.
+
+    An average case uses probabilistic analysis to determine, given any reasonable input, what the typical runtime is.
+    \item Suppose we have two functions, $f$ and $g$, which operate on some domain $\mathbb{D}$, and let $x\in\mathbb{D}$. Then, if there there exists some constants $c$ and $y\in\mathbb{D}$ such that for all $x \geq y$, $g(x) \leq c\cdot f(x)$, we say that $g(x)\in O(f(x))$. This can be interpreted as the fact that there is a scalar multiple of $f$ (that'd be $c\cdot f(x)$) which is consistently larger (and therefore grows more quickly than) $g$ for all elements of the domain past some point (which is $y$).
+\end{enumerate}
+
+
+\subsection{Lists}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{7}
+    \item All \texttt{C}-style arrays are pre-allocated blocks of contiguous memory. A dynamic array is dynamic only in the sense that the memory was allocated at run-time, and that the array can ``grow'' (which amounts to allocating a larger block of memory and copying the contents of the previous block over to it).
+
+    A linked list consists of elements which store references to their successors (and predecessors, in the case of a doubly-linked list). Their size is flexible because each element is created on demand. Unlike \texttt{C}-style arrays, the memory occupied by the data structure is not contiguous.
+    \item Singly-linked lists use less memory than doubly-linked lists because they do not store a reference to their predecessor. However, unlike doubly-linked lists, singly-linked lists are unable to traverse backwards through themselves because each element lacks a reference to their predecessor.
+
+    Doubly-linked lists could retrieve the element before the tail in $O(1)$ time, while a singly-linked list would take $O(n)$ time to do it. This is an excellent example of time/storage complexity tradeoffs.
+
+    For certain applications, it is desireable that an iterator be able to traverse the list in both directions -- in this case, a doubly-linked list should be used.
+
+    For other applications, memory usage is more important, which pushes a solution towards a singly-linked list.
+    \item A node class defines what the elements of a linked list might look like; the kind of data (value is not as generic -- we could store an array in a node, which is a kind of data, but not a singular value) they might hold, whether they have a link to their predecessor, successor, or both.
+
+    A linked list is built from a series of linked nodes. A linked list class typically consists of a reference to the head of the list (the only node without a predecessor) and the tail of the list (the only node without a successor) -- having access to both the head and the tail ensures $O(1)$ time removal and insertion at either end.
+    \item A static array is an array which has memory that is allocated when the program is loaded into memory -- its size was known at compile time. The memory used can be thought of as a contiguous block.
+
+    A dynamic array is an array which has memory allocated during run-time: the size is not known at compile-time because it depends on user input, computations done by the program, or for any of a different number of reasons. Dynamic arrays are created by using the \mintinline{java}{new} keyword. Like static arrays, they are also contiguous blocks of memory.
+
+    A linked list, by comparison, has a much more complex memory layout. Because each node is allocated at run-time, the memory occupied is not contiguous. The linked list object will typically consist of a block of memory which contains all of the methods of the class, as well as a variable holding the size, and a reference to the head and the tail of the linked list. The actual contents of the linked list are scattered throughout system memory (more accurately, wherever the \texttt{JVM} found space to store them).
+    \item Write the code to perform [\mintinline{java}{set()} \vline\ \mintinline{java}{get()} \vline\ \mintinline{java}{add()} \vline\ \mintinline{java}{append()} \vline\ \mintinline{java}{insert()} \vline\ \mintinline{java}{remove()} \vline\ \mintinline{java}{contains()} \vline\ \mintinline{java}{indexof()}] for a [dynamic array list \vline\ singly linked list \vline\ doubly linked list].
+    
+    \textbf{Waiting on hearing if sharing these would be an honor code violation.}
+    \item Big-$O$ models the time it takes an algorithm to finish running in its worst case scenario. With respect to an \mintinline{java}{ArrayList}, the worst case would involve running out of space in the currently allocated block of memory, in which case the object allocates somewhere in the neighborhood of double the memory and copies over the data stored in the old block of memory (which takes $O(n)$ time). Usually there's more than enough room and resizing happens very rarely. As such, the amortized cost is only $O(1)$ (that is, the \textit{expected} cost of each operation -- this is \textit{not} the same thing as the average cost).
+
+    \item Given an array representing a list, write the code to convert it into the equivalent linked list.
+    
+    \textbf{Waiting on hearing if sharing these would be an honor code violation.}
+    \item Write the code to perform an [insertion \vline\ selection] sort on a singly linked list (with optimal Big-$O$).
+    
+    \textbf{Waiting on hearing if sharing these would be an honor code violation.}
+    \item Describe how you make a class ``iterable" in Java.
+    
+    This depends on what you mean by iterable.
+    
+    If you mean a class that can be iterated over, then you need only need to add \mintinline{java}{implements Iterator<E>} to the class and implement \mintinline{java}{hasNext()} and \mintinline{java}{next()}. (Both \mintinline{java}{remove()} and \mintinline{java}{forEachRemaining()} have default implementations and don't need to be implemented.)
+
+    If by iterable you mean that the class \mintinline{java}{implements Iterable<T>}, then all that is needed is to create a method \mintinline{java}{Iterator<T> iterator()} which returns an iterator for the object is was invoked on. Of course, if you don't have an iterator, you'll need to build one, either with an anonymous class or in some other fashion.
+    \item Write code to implement a basic iterator for a(n) [array \vline\ linked list] and show how the iterator would be used.
+    
+    \textbf{Waiting on hearing if sharing these would be an honor code violation.}
+\end{enumerate}
+
+\subsection{Queues and Stacks}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{17}
+    \item Explain the difference between a queue and a stack.
+    
+    Queues are FIFO (first in, first out) data structures. Elements are added at the tail and are removed from the head. An example would be people waiting in line at a carwash.
+
+    Stacks are LIFO (last in, first out) data structures. Elements are added and removed from the tail. Think of it like a tower of plates -- plates are put on the top and removed from the top. (This will only make sense to you if you're not the special kind of maniac that tries to grab plates from the bottom.)
+
+    \item We would get the character \mintinline{java}{'d'}.
+    \item We would get the character \mintinline{java}{'a'}.
+    \item Implementing a queue with a linked list (singly or doubly doesn't particularly matter -- the only difference is ensuring that nodes recognize their predecessor as well as their successor):
+    \begin{itemize}
+        \item Add elements only to the tail of the linked list
+        \item Remove elements only from the head of the linked list
+    \end{itemize}
+    for optimal Big-$O$ items should be removed or inserted at the head (guarantees $O(1)$ time).
+
+    Implementing a stack with a linked list (singly or doubly doesn't particularly matter -- the only difference is ensuring that nodes recognize their predecessor as well as their successor):
+    \begin{itemize}
+        \item Add elements only to the tail of the linked list
+        \item Remove elements only from the tail of the linked list
+    \end{itemize}
+    for optimal Big-$O$ items should be removed or inserted at the tail (guarantees $O(1)$ time).
+    \item Add or remove items only at the after index of the previously added or removed element. 
+    
+    This avoids the problem of shifting all the elements upon adding or removing (which would happen if we allowed adding or removing at the front).
+    
+    This also allows for an adding and removing to take $O(1)$ time (amortized of course, since the worst case is $O(n)$ as we'd need to resize the array).
+    \item Explain how a circular queue works for storing a queue in an array.
+    
+    \textbf{Revisiting later.}
+    \item Given a series of adds and removes into a [stack \vline\ queue] stored in a(n) [array \vline\ singly linked list \vline\ doubly linked list], draw a representation of the resulting memory.
+    
+    Remember to include any additional storage you need for helper variables such as size, top, etc.
+
+    \textbf{Revisiting later.}
+    \item Write the code to perform [add \vline\ remove \vline\ isEmpty \vline\ peek] for a [queue \vline\ stack].
+    
+    \textbf{Waiting on hearing if sharing these would be an honor code violation.}
+\end{enumerate}
+
+
+\subsection{Trees}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{25}
+\item Explain the following terms: 
+\begin{multicols}{2}
+    \begin{itemize}
+        \item Tree: A set of nodes and edges with no cycles
+        \item Root: A node with no parent
+        \item Descendants: All of the nodes that can be reached by some path starting from a given node
+        \item Ancestors: All of the nodes on the path from a node to the root
+        \item Leaves: Nodes without children
+        \item Siblings: Nodes of the same depth
+        \item Parent: The immediate predecessor of a given node
+        \item Child: The immediate successor(s) of a given node
+        \item Depth: The length of the path from the given node to the root 
+        \item Node height: The length of the path from the given node to the deepest leaf
+        \item Tree height: The height of the root
+        \item Full tree: A tree in which every node other than the leaves has the maximum number of children
+        \item Complete tree: A tree that is completely filled
+        \item Nearly complete tree: A tree that is completely filled, with the possible exception of the bottom level, which is filled from left to right and has no missing nodes
+        \item Perfect tree: A full tree in which all leaves have the same depth
+        \item Balanced tree: (With respect to a binary tree) a tree in which the height of the left and right sub-trees of every node differ by 1 or 0 (as used by an AVL tree)
+    \end{itemize}    
+\end{multicols}
+
+\item Given a tree, identify the [root \vline\ leaves \vline\ tree height \vline\ tree size]. Given a tree, label each node with its [depth \vline\ height]. Given a tree, identify if it is [full \vline\ (nearly) complete \vline\ perfect \vline\ balanced].
+
+\textbf{Review class lectures for examples.}
+\item Explain how to store a binary tree using an [array \vline\ linked structure]. 
+\begin{enumerate}
+    \item For an array, explain how to find the child/parent of a given node based only on the index of that element.
+    \item For a linked structure, write the code for a node.
+\end{enumerate} 
+Can you generalize the idea to $k$-ary trees
+
+\textbf{Revisit later.}
+\item Write a recursive method to calculate the [size \vline\ height] of a tree.
+
+\textbf{Waiting on hearing if sharing these would be an honor code violation.}
+\item Given a tree, perform a [pre-order \vline\ post-order \vline\ in-order \vline\ level-order] walk of the tree, printing the nodes.
+
+\textbf{Review class lectures for examples.}
+\item Write code for a recursive [pre-order \vline\ post-order \vline\ in-order] tree traversal of a binary tree that prints the node values out. Assume a generic \mintinline{java}{Node<T>} class with a data field and a array of node children.
+
+\textbf{Waiting on hearing if sharing these would be an honor code violation.}
+\end{enumerate}
+
+\subsection{Hashing}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{31}
+\item What is the goal of hashing? (i.e. Why would we want to hash something into a hash table?)
+\item Explain the difference between a hash code, a hash function, and a hash table. How does a hash code differ from the index of a hash table?
+\item Create a hash function for [strings \vline\ numbers \vline\ cards \vline\ people] which generates relatively unique values.
+
+\textbf{Waiting on hearing if sharing these would be an honor code violation.}
+\item Explain Java's hash-contract and why it is necessary.
+\item Explain the idea of "load" on a table and how it relates to the big-O of the hash table's [\mintinline{java}{add()} | \mintinline{java}{remove()} \vline\ \mintinline{java}{contains()}] methods.
+\item Hash [strings \vline\ numbers \vline\ cards \vline\ people] into a hash table of size [some number] using separate chaining and the hash function you wrote above.
+
+\textbf{Waiting on hearing if sharing these would be an honor code violation.}
+\item Rehash your tables above to [a prime number over double the size].
+\item Write code for an [\mintinline{java}{add()} \vline\ \mintinline{java}{remove()} \vline\ \mintinline{java}{contains()} \vline\ \mintinline{java}{rehash()} \vline\ \mintinline{java}{getLoad()}] method in a hash table which uses separate chaining.
+
+\textbf{Waiting on hearing if sharing these would be an honor code violation.}
+\end{enumerate}
+
+\subsection{General Programming and Java Specific}
+\begin{enumerate}[leftmargin=0em]\addtocounter{enumi}{39}
+\item The concatenation operator takes $O(n^2)$ time since $\exists c : n = mc \implies O(nm) = O(c\cdot n^2)$ and $O(c\cdot n^2) \in O(n^2)$.
+\item A generic class is defined by a \textit{type parameter}. If we wanted to create a box that could hold any type of data (borrowing from the first lecture), we would have \mintinline{java}{class Box<T> { T data; }}.
+
+Generic classes are useful for data structures because they reduce code duplication and encourage code-reuse. Why make a box for a \mintinline{java}{char}, \mintinline{java}{short}, \mintinline{java}{int}, and \mintinline{java}{long} when you can make one box that holds all kinds of data? The unspoken benefit is that it also makes your data structure easy to extend -- for instance, the \mintinline{java}{Box} object can hold things that might be beyond the scope of the original author's imagined use cases.
+\item Explain recursion to someone who has never heard of it before. Make sure your answer includes the following terms: base case, recursive case, readability, efficiency, and iteration.
+
+\textbf{Reminds me of work so I'll revisit this later.}
+\item Given an iterative function, write the same function using recursion. Given a recursive function, write the same function using iteration.
+
+\textbf{Review class lectures for examples.}
+\item Explain how you can walk backward in a singly linked list using either recursion or a stack. Why does recursion work without needing to make your own stack?
+
+\textbf{Revisit later.}
+\end{enumerate}
+
+
+\label{LastPage}~\end{document}
