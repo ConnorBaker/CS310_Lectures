@@ -74,8 +74,8 @@ Well there aren't really *three* different types of probing -- rather, there's t
 
 1. Separate Chaining
 2. Open Addressing
-    1. Linear probing
-    2. Quadratic probing
+   1. Linear probing
+   2. Quadratic probing
 
 #### Separate Chaining
 
@@ -112,17 +112,177 @@ There are 52 cards in a deck, so create a bijection between the cards and the se
 People are (somewhat) uniquely identifiable by their full names, which are in turn strings, so this problem reduces to the first involving strings.
 
 47. Hash [strings | numbers | cards | people] into a hash table of size [some number using [separate chaining | open addressing w/ linear probing | open addressing w/ quadratic probing | open addressing w/ double hashing where `h2(key) = 5 - (key % 5)`] and the hash function you wrote above.
+
+**Omitted.**
+
 48. After hashing the above [strings | numbers | cards | people] remove three of them, making sure to visually indicate any special states.
+
+**Omitted.**
+
 49. Rehash your tables above to [a prime number over double the size].
+
+**Omitted.**
+
 50. Write code for an [add | remove | contains | rehash | getLoad] method in a hash table which uses [separate chaining | open addressing with linear probing | open addressing with quadratic probing | open addressing with double hashing where `h2(key) = 7 - (key % 7)`].
+
+**Omitted.**
+
 51. Explain how Java [String | Integer | Double | Character] class produces hash codes.
+
+#### String
+
+Oracle's release of `String.java` has the following:
+
+~~~java
+/**
+ * Returns a hash code for this string. The hash code for a
+ * {@code String} object is computed as
+ * <blockquote><pre>
+ * s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
+ * </pre></blockquote>
+ * using {@code int} arithmetic, where {@code s[i]} is the
+ * <i>i</i>th character of the string, {@code n} is the length of
+ * the string, and {@code ^} indicates exponentiation.
+ * (The hash value of the empty string is zero.)
+ *
+ * @return  a hash code value for this object.
+ */
+public int hashCode() {
+    int h = hash;
+    if (h == 0 && value.length > 0) {
+        hash = h = isLatin1() ? StringLatin1.hashCode(value)
+                              : StringUTF16.hashCode(value);
+    }
+    return h;
+}
+~~~
+
+Taking a look at `StringLatin1.java` reveals
+
+~~~java
+public static int hashCode(byte[] value) {
+    int h = 0;
+    for (byte v : value) {
+        h = 31 * h + (v & 0xff);
+    }
+    return h;
+}
+~~~
+
+and `StringUTF16.java` similarly shows
+
+~~~java
+public static int hashCode(byte[] value) {
+    int h = 0;
+    int length = value.length >> 1;
+    for (int i = 0; i < length; i++) {
+        h = 31 * h + getChar(value, i);
+    }
+    return h;
+}
+~~~
+
+#### Integer
+
+Oracle's release of `Integer.java` has the following:
+
+~~~java
+/**
+ * Returns a hash code for this {@code Integer}.
+ *
+ * @return  a hash code value for this object, equal to the
+ *          primitive {@code int} value represented by this
+ *          {@code Integer} object.
+ */
+@Override
+public int hashCode() {
+    return Integer.hashCode(value);
+}
+
+/**
+ * Returns a hash code for an {@code int} value; compatible with
+ * {@code Integer.hashCode()}.
+ *
+ * @param value the value to hash
+ * @since 1.8
+ *
+ * @return a hash code value for an {@code int} value.
+ */
+public static int hashCode(int value) {
+    return value;
+}
+~~~
+
+#### Double
+
+Oracle's release of `Double.java` has the following:
+
+~~~java
+/**
+ * Returns a hash code for this {@code Double} object. The
+ * result is the exclusive OR of the two halves of the
+ * {@code long} integer bit representation, exactly as
+ * produced by the method {@link #doubleToLongBits(double)}, of
+ * the primitive {@code double} value represented by this
+ * {@code Double} object. That is, the hash code is the value
+ * of the expression:
+ *
+ * <blockquote>
+ *  {@code (int)(v^(v>>>32))}
+ * </blockquote>
+ *
+ * where {@code v} is defined by:
+ *
+ * <blockquote>
+ *  {@code long v = Double.doubleToLongBits(this.doubleValue());}
+ * </blockquote>
+ *
+ * @return  a {@code hash code} value for this object.
+ */
+@Override
+public int hashCode() {
+    return Double.hashCode(value);
+}
+
+/**
+ * Returns a hash code for a {@code double} value; compatible with
+ * {@code Double.hashCode()}.
+ *
+ * @param value the value to hash
+ * @return a hash code value for a {@code double} value.
+ * @since 1.8
+ */
+public static int hashCode(double value) {
+    long bits = doubleToLongBits(value);
+    return (int)(bits ^ (bits >>> 32));
+}
+~~~
+
+#### Character
+
+Oracle's release of `Character.java` has the following:
+
+~~~java
+/**
+ * Returns the standard hash code as defined by the
+ * {@link Object#hashCode} method.  This method
+ * is {@code final} in order to ensure that the
+ * {@code equals} and {@code hashCode} methods will
+ * be consistent in all subclasses.
+ */
+public final int hashCode() {
+    return super.hashCode();
+}
+~~~
+
+Since a character is just an ASCII values, it's essentially calling the `Integer`'s `hashCode()` method.
 
 ### Graphs
 
 52. Explain the following terms: graph, node, edge, adjacent to, directed edge, weight, $|V|$, $|E|$, path, simple path, path length, cycle, degree/indegree/outdegree of a vertex, DAG.
-52. Explain the difference between the following types of graphs: directed/undirected, weighted/unweighted, cyclic/acyclic, dense/sparse, connected/disconnected.
-53. Explain the two ways to store a graph we covered in class. When would you want to use which?
-54. Given a graph, draw the corresponding adjacency [matrix | list]. Given an adjacency [matrix | list], draw the corresponding graph.
+53. Explain the difference between the following types of graphs: directed/undirected, weighted/unweighted, cyclic/acyclic, dense/sparse, connected/disconnected.
+54. Explain the two ways to store a graph we covered in class. When would you want to use which?
+55. Given a graph, draw the corresponding adjacency [matrix | list]. Given an adjacency [matrix | list], draw the corresponding graph.
 
 ### Graph Algorithms
 
@@ -155,7 +315,8 @@ People are (somewhat) uniquely identifiable by their full names, which are in tu
 69. Given [a scenario] determine which tree you would use, justify your answer. Examples:
     + You need to sort 1000 items.
     + You want to keep track of 10,000 key-value pairs such that you can (a) efficiently print all
-    the items in key-order, (b) have fast "look-up", and (c) relatively fast insertion.
+      
+      the items in key-order, (b) have fast "look-up", and (c) relatively fast insertion.
     + You want to index a very large data set that does not fit into memory
 
 ### Non-Balancing Search Trees (BST)
