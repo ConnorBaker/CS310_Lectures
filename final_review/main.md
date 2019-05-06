@@ -327,6 +327,17 @@ Since a character is just an ASCII values, it's essentially calling the `Integer
   + Presence or absence of the property that there is a path from every vertex to every other vertex (when a graph has this property, we call it *strongly connected*)
 
 54. Explain the two ways to store a graph we covered in class. When would you want to use which?
+
+#### Adjacency Matrix
+
+Assume that all vertices have a unique number identifying them. Then we have an array.
+
+![A comparison of features between undirected and directed graphs](images/1.png){ width=50% }
+
+#### Adjacency List
+
+An adjacency list would be a list of vertices where every vertex points to a list of vertices that it is predecessor of.
+
 55. Given a graph, draw the corresponding adjacency [matrix | list]. Given an adjacency [matrix | list], draw the corresponding graph.
 
 ### Graph Algorithms
