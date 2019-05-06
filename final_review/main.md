@@ -313,7 +313,9 @@ Since a character is just an ASCII values, it's essentially calling the `Integer
 
 **Directed Acyclic Graph (DAG)**: A directed graph without cycles.
 
-53. Explain the difference between the following types of graphs: directed/undirected, weighted/unweighted, cyclic/acyclic, dense/sparse, connected/disconnected.
+*NB: The numbering in the PDF I'm following is weird -- it's not me.*
+
+52. Explain the difference between the following types of graphs: directed/undirected, weighted/unweighted, cyclic/acyclic, dense/sparse, connected/disconnected.
 
 + Directed vs. Undirected
   + Presence or absence of edges where the order of the vertices matter
@@ -326,7 +328,7 @@ Since a character is just an ASCII values, it's essentially calling the `Integer
 + Connected vs. Disconnected
   + Presence or absence of the property that there is a path from every vertex to every other vertex (when a graph has this property, we call it *strongly connected*)
 
-54. Explain the two ways to store a graph we covered in class. When would you want to use which?
+53. Explain the two ways to store a graph we covered in class. When would you want to use which?
 
 #### Adjacency Matrix
 
@@ -338,7 +340,10 @@ Assume that all vertices have a unique number identifying them. Then we have an 
 
 An adjacency list would be a list of vertices where every vertex points to a list of vertices that it is predecessor of.
 
-55. Given a graph, draw the corresponding adjacency [matrix | list]. Given an adjacency [matrix | list], draw the corresponding graph.
+
+54. Given a graph, draw the corresponding adjacency [matrix | list]. Given an adjacency [matrix | list], draw the corresponding graph.
+
+**Omitted.**
 
 ### Graph Algorithms
 
@@ -350,7 +355,7 @@ An adjacency list would be a list of vertices where every vertex points to a lis
 
 ### Priority Queues/ Heaps
 
-*NB: The numbering in the PDF I'm follow is weird -- it's not me.*
+*NB: The numbering in the PDF I'm following is weird -- it's not me.*
 
 56. What are the common operations supported by a priority queue?
 57. Compare and contrast different data structures we covered in class to implement a priority queue.
