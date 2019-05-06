@@ -314,6 +314,18 @@ Since a character is just an ASCII values, it's essentially calling the `Integer
 **Directed Acyclic Graph (DAG)**: A directed graph without cycles.
 
 53. Explain the difference between the following types of graphs: directed/undirected, weighted/unweighted, cyclic/acyclic, dense/sparse, connected/disconnected.
+
++ Directed vs. Undirected
+  + Presence or absence of edges where the order of the vertices matter
++ Weighted vs. Unweighted
+  + Presence or absence of edge weights
++ Cyclic vs. Acyclic
+  + Presence or absence of cycles
++ Dense vs. Sparse
+  + Presence or absence of a large number of edges relative to the number of vertices
++ Connected vs. Disconnected
+  + Presence or absence of the property that there is a path from every vertex to every other vertex (when a graph has this property, we call it *strongly connected*)
+
 54. Explain the two ways to store a graph we covered in class. When would you want to use which?
 55. Given a graph, draw the corresponding adjacency [matrix | list]. Given an adjacency [matrix | list], draw the corresponding graph.
 
