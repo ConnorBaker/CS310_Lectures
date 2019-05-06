@@ -1,3 +1,30 @@
+---
+title: "Final Review"
+author: [Connor Baker]
+date: 2019-05-06, Compiled on \today\ at \currenttime
+subject: "CS 310"
+keywords: [Lecture, Trees, B Trees, B+ Trees]
+subtitle: "A review of all the concepts covered since the midterm"
+lang: "en"
+titlepage: true
+titlepage-color: "FFFFFF"
+titlepage-text-color: "0d47a1"
+titlepage-rule-color: "0d47a1"
+titlepage-rule-height: 2
+papersize: "letter"
+fontsize: "10pt"
+listings-disable-line-numbers: false
+footer-right: \thepage\ of \pageref{LastPage}
+header-right: "2019-05-06"
+header-includes:
+  - \setcounter{page}{0} # So that the titlepage is the zeroth page
+  - \lstset{breaklines=true}
+  - \lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{blue}\hookrightarrow\space}}}
+  - \usepackage{datetime}
+  - \settimeformat{ampmtime}
+  - \usepackage{lastpage}
+---
+
 # Final Review
 
 ## Reading List Notes and Quick References
@@ -70,6 +97,9 @@ $$
 $$
 which yields a very steep exponential growth curve for the number of cells checked during an insertion, with respect to the load.
 
+Quadratic probing still needs to use tombstones. However, it doesn't suffer from primary clustering since it checks a more dispersed group of cells. The complexity of quadratic probing isn't known.
+
+A major benefit to use quadratic probing is that if the table size is prime and the load factor stays been $0.5$, you are guaranteed to be able to insert and item. Additionally, we get the property that no cell is probed twice.
 
 46. Create a hash function for [strings | numbers | cards | people] which generates relatively unique values.
 47. Hash [strings | numbers | cards | people] into a hash table of size [some number using [separate chaining | open addressing w/ linear probing | open addressing w/ quadratic probing | open addressing w/ double hashing where `h2(key) = 5 - (key % 5)`] and the hash function you wrote above.
