@@ -99,11 +99,21 @@ header-includes:
 
 ## Example: Min Heap
 
-+ Note: `[n]` represents the index for the value `n`
+Assume we're given the array
 
-![`precolateDown([20])` and `precolateDown([21])`](images/4.png){ width=75% }
+~~~java
+int[] arr = [92, 47, 21, 20, 12, 45, 63, 61, 17, 55, 37, 25, 64, 83, 73];
+~~~
 
-![`precolateDown([47])` and `precolateDown([92])`](images/5.png){ width=75% }
+Then we perform the following steps to convert it to a heap (noting that `percolateDown()` takes as an argument the *index* of the array to percolate):
+
+![Left: Initial heap; Right: after `percolateDown(7)`](images/10.png){ width=50% }
+
+![Left: After `percolateDown(6)`; Right: After `percolateDown(5)`](images/11.png){ width=50% }
+
+![Left: After `percolateDown(4)`; Right: After `percolateDown(3)`](images/12.png){ width=50% }
+
+![Left: After `percolateDown(2)`; Left: After `percolateDown(1)` and `buildHeap` terminate](images/13.png){ width=50% }
 
 ## Heapify Implementation
 

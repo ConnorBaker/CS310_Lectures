@@ -637,25 +637,43 @@ Location}\label{issue-1-changed-root-location}}
 \hypertarget{example-min-heap}{%
 \subsection{Example: Min Heap}\label{example-min-heap}}
 
-\begin{itemize}
-\tightlist
-\item
-  Note: \passthrough{\lstinline![n]!} represents the index for the value
-  \passthrough{\lstinline!n!}
-\end{itemize}
+Assume we're given the array
+
+\begin{lstlisting}[language=Java]
+int[] arr = [92, 47, 21, 20, 12, 45, 63, 61, 17, 55, 37, 25, 64, 83, 73];
+\end{lstlisting}
+
+Then we perform the following steps to convert it to a heap (noting that
+\passthrough{\lstinline!percolateDown()!} takes as an argument the
+\emph{index} of the array to percolate):
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\textwidth,height=\textheight]{images/4.png}
-\caption{\passthrough{\lstinline!precolateDown([20])!} and
-\passthrough{\lstinline!precolateDown([21])!}}
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/10.png}
+\caption{Left: Initial heap; Right: after
+\passthrough{\lstinline!percolateDown(7)!}}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\textwidth,height=\textheight]{images/5.png}
-\caption{\passthrough{\lstinline!precolateDown([47])!} and
-\passthrough{\lstinline!precolateDown([92])!}}
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/11.png}
+\caption{Left: After \passthrough{\lstinline!percolateDown(6)!}; Right:
+After \passthrough{\lstinline!percolateDown(5)!}}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/12.png}
+\caption{Left: After \passthrough{\lstinline!percolateDown(4)!}; Right:
+After \passthrough{\lstinline!percolateDown(3)!}}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{images/13.png}
+\caption{Left: After \passthrough{\lstinline!percolateDown(2)!}; Left:
+After \passthrough{\lstinline!percolateDown(1)!} and
+\passthrough{\lstinline!buildHeap!} terminate}
 \end{figure}
 
 \hypertarget{heapify-implementation}{%
