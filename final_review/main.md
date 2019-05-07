@@ -951,18 +951,154 @@ $$
 
 As $c_1 \times n \in O(n)$ and $c_2 \times n \in O(n)$ it follows that $n \log_k(bk+a) \in O(n)$.
 
-71.   How can you determine the [min | max] value in a BST tree?
-72.   Given a node in a BST tree, how can you find [successor | predecessor] of that node (i.e. find the smallest value larger than the node or find the largest value smaller than the node].
-73.   Write the code for searching a BST for a given value. Assume a generic `Node<T>` class with a data field and left/right references. Assume the search method is given the root of the tree and a value to search for.
-74.   Given a BST and a value, show the steps to remove that value from the BST.
-75.   Write the code for [insert | remove| findMin | findMax | printSubset] in a BST. Assume a generic `Node<T>` class with a data field and `left`/`right` references.
+71. How can you determine the [min | max] value in a BST tree?
+
+In a BST, the min value is the leftmost leaf, while the max value is the rightmost leaf.
+
+72. Given a node in a BST tree, how can you find [successor | predecessor] of that node (i.e. find the smallest value larger than the node or find the largest value smaller than the node].
+
+The predecessor of a node is the rightmost node in the left subtree of the node.
+
+The successor of a node is the leftmost node in the right subtree of the node.
+
+73. Write the code for searching a BST for a given value. Assume a generic `Node<T>` class with a data field and left/right references. Assume the search method is given the root of the tree and a value to search for.
+
+From Weiss (Figure 19.8)
+
+~~~java
+/**
+ * Internal method to find an item in a subtree.
+ * @param x is item to search for.
+ * @param t the node that roots the tree.
+ * @return node containing the matched item.
+ */
+private BinaryNode<AnyType> find( AnyType x, BinaryNode<AnyType> t )
+{
+    while( t != null ) {
+        if( x.compareTo( t.element ) < 0 )
+            t = t.left;
+        else if( x.compareTo( t.element ) > 0 )
+            t = t.right;
+        else
+            return t; // Match
+        }
+    return null;      // Not found
+}
+~~~
+
+74. Given a BST and a value, show the steps to remove that value from the BST.
+
+From Weiss (pg. 689-690)
+
+> The `remove` operation is difficult because nonleaf nodes hold the tree together and we do not want to disconnect the tree.
+>
+> ...
+>
+> If a node has one child, it can be removed by having its parent bypass it. The root is a special case because it does not have a parent.
+>
+> ...
+>
+> A node with two children is replaced by using the smallest item in the right subtree. Then another node is removed.
+
+![Deletion of node 5 with one child: (a) before and (b) after](images/14.png){ width=50% }
+
+![Deletion of node 2 with two children: (a) before and (b) after](images/15.png){ width=50% }
+
+75. Write the code for [insert | remove| findMin | findMax | printSubset] in a BST. Assume a generic `Node<T>` class with a data field and `left`/`right` references.
+
+The code for `insert`, `remove`, `findMin`, and `findMax` is in the textbook (Weiss, Figures 19.9-12).
+
+#### Insert (Figure 19.10)
+
+~~~java
+/**
+ * Internal method to insert into a subtree.
+ * @param x the item to insert.
+ * @param t the node that roots the tree.
+ * @return the new root.
+ * @throws DuplicateItemException if x is already present.
+ */
+protected BinaryNode<AnyType> insert( AnyType x, BinaryNode<AnyType> t )
+{
+    if( t == null )
+      t = new BinaryNode<AnyType>( x );
+    else if( x.compareTo( t.element ) < 0 )
+      t.left = insert( x, t.left );
+    else if( x.compareTo( t.element ) > 0 )
+      t.right = insert( x, t.right );
+    else
+      throw new DuplicateItemException( x.toString( ) ); // Duplicate
+    return t;
+}
+~~~
+
+#### findMin and findMax (Figure 19.9)
+
+~~~java
+/**
+ * Internal method to find the smallest item in a subtree. 
+ * @param t the node that roots the tree.
+ * @return node containing the smallest item.
+ */
+protected BinaryNode<AnyType> findMin( BinaryNode<AnyType> t )
+{
+    if( t != null )
+        while( t.left != null )
+            t = t.left;
+    return t;
+}
+
+/**
+ * Internal method to find the largest item in a subtree.
+ * @param t the node that roots the tree.
+ * @return node containing the largest item.
+ */
+private BinaryNode<AnyType> findMax( BinaryNode<AnyType> t )
+{
+    if( t != null )
+        while( t.right != null )
+            t = t.right;
+    return t;
+}
+~~~
+
+#### remove (Figure 19.12)
+
+~~~java
+/**
+ * Internal method to remove from a subtree.
+ * @param x the item to remove.
+ * @param t the node that roots the tree.
+ * @return the new root.
+ * @throws ItemNotFoundException if x is not found.
+ */
+protected BinaryNode<AnyType> remove( AnyType x, BinaryNode<AnyType> t )
+{
+    if( t == null )
+        throw new ItemNotFoundException( x.toString( ) );
+    if( x.compareTo( t.element ) < 0 )
+        t.left = remove( x, t.left );
+    else if( x.compareTo( t.element ) > 0 )
+        t.right = remove( x, t.right );
+    else if( t.left != null && t.right != null ) // Two children
+    {
+        t.element = findMin( t.right ).element;
+        t.right = removeMin( t.right );
+    }
+    else
+        t = ( t.left != null ) ? t.left : t.right;
+    return t;
+}
+~~~
+
+*The function `printSubset()` is omitted as it is not in the textbook.*
 
 ### Self-Balancing Search Trees (AVL / Red-Black)
 
-76.  Explain the "cases" for inserting into a [AVL | Red-Black] tree.
-77.  Determine an order of inserting the keys 1, 2, and 3 into an AVL which would require a [single right rotation | single left rotation | left-right double rotation | right-left double rotation].
-78.  Determine a set of keys and an order to insert them which would produce each of the cases for inserting into a Red-Black tree. Label each case with a meaningful name (not just "case 1", "case 2", etc.).
-79.  Compare AVL trees and Red-Black trees for pros and cons. Explain when/why you would use an AVL instead of a Red-Black Tree and explain when/why you would use an a Red-Black Tree instead of an AVL.
+76. Explain the "cases" for inserting into a [AVL | Red-Black] tree.
+77. Determine an order of inserting the keys 1, 2, and 3 into an AVL which would require a [single right rotation | single left rotation | left-right double rotation | right-left double rotation].
+78. Determine a set of keys and an order to insert them which would produce each of the cases for inserting into a Red-Black tree. Label each case with a meaningful name (not just "case 1", "case 2", etc.).
+79. Compare AVL trees and Red-Black trees for pros and cons. Explain when/why you would use an AVL instead of a Red-Black Tree and explain when/why you would use an a Red-Black Tree instead of an AVL.
 
 ### Union Find / Disjoint Sets
 
