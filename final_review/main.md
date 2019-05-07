@@ -334,7 +334,7 @@ Since a character is just an ASCII values, it's essentially calling the `Integer
 
 Assume that all vertices have a unique number identifying them. Then we have an array.
 
-![A comparison of features between undirected and directed graphs](images/1.png){ width=50% }
+![A comparison of features between undirected and directed graphs](images/1.png){ width=75% }
 
 This approach is beneficial when you have memory to spare and want $O(1)$ lookups.
 
@@ -365,7 +365,7 @@ Taken from notes on 2019-03-26.
 
 ##### Example
 
-![A simple undirected graph](images/2.png){ width=50% }
+![A simple undirected graph](images/2.png){ width=35% }
 
 + A breadth-first traversal starting with $0$: $\{0\}$
   + Visit all the nodes adjacent to $0$: $\{0, 1, 2, 3\}$
@@ -395,7 +395,7 @@ Taken from notes on 2019-03-26.
 
 ##### Example
 
-![A simple undirected graph](images/2.png){ width=50% }
+![A simple undirected graph](images/2.png){ width=35% }
 
 A depth-first traversal starting with $0$: $\{0\}$
 
@@ -440,7 +440,7 @@ Taken from notes on 2019-03-28.
 
 Suppose we want to find the shortest path given the following graph, and starting at vertex $0$.
 
-![A weighted, undirected graph](images/3.png){ width=50% }
+![A weighted, undirected graph](images/3.png){ width=35% }
 
 <center>
 
@@ -544,7 +544,7 @@ Prev        | 0 |    0    |    0    | ~~0~~ 2 |    1    |    4    | ~~1~~ 5 |
 
 #### General Performance of Different Implementations
 
-Data Structure     | `enqueue(T t, int p)`   | `peek()`$^*$      | `dequeue()`$^*$   | Notes
+Data Structure     | `enqueue()`   | `peek()`$^*$      | `dequeue()`$^*$   | Notes
 :-------------:    | :--------------: | :--------:    | :----------:  | :------:
 Unsorted List      | $O(1)$           | $O(n)$        | $O(n)$        | best priority can be any location
 Sorted Array       | $O(n)$           | $O(1)$        | $O(1)$        | best priority at high index
@@ -608,23 +608,148 @@ Binary Search Tree | $O($height$)$    | $O($height$)$ | $O($height$)$ | min at l
 *Omitted -- see textbook.*
 
 59. How can you determine the [min | max] value in a heap? Show the steps to remove the [min | max] value from the heap. Show the steps to insert a value into a heap and keep the heap order.
+
+#### Determining the Minimum or Maximum Value in a Heap
+
+Recall the *Heap Order Property*: In a heap, for every node $X$ with parent $P$, the key in $P$ is smaller than or equal to the key in $X$ (at least, for min-heaps -- with max-heaps, the property is inverted).
+
+Therefore, if the heap is a min-heap, the minimum is at the root and the maximum is one of the leaves on the bottom of the tree.
+
+Similarly, if the heap is a max-heap, the maximum is at the root and the minimum is one of the leaves on the bottom of the tree.
+
+#### Removal
+
+As a fact worth remembering, Recall that our textbook (Weiss) states that
+
+> The `deleteMin` operation is logarithmic in both the worst and average cases.
+
+To remove the minimum value in a min-heap, we pop the most recently added value out, put a hole at the root, and then percolate the hole downwards, placing it wherever we can in a leaf. We then insert the value that we popped in the hole.
+
+![Creation of the hole at the root](images/6.png){ width=50% }
+
+![The next two steps in the `deleteMin` operation](images/7.png){ width=50% }
+
+![The last two steps in the `deleteMin` operation](images/8.png){ width=50% }
+
+To remove the maximum value from a min-heap, find the leaf which holds the maximum value and replace it with the farthest right node possible.
+
+Removal for a max-heap follows similarly to removal for min-heap, albeit with the locations of the minimum and maximum swapped.
+
+#### Insertion
+
+As a fact worth remembering, Recall that our textbook (Weiss) states that
+> Insertion takes constant time on average but logarithmic time in the worst case.
+
+To insert a value in a min-heap, we add the value at the next available leaf (since we must maintain a complete tree, we cannot insert it anywhere else). Then, percolate the value up the tree until we have satisfied the Heap Order Property.
+
+![Attempt to insert 14, creating the hole and bubbling the hole up](images/4.png){ width=50% }
+
+![The remaining two steps required to insert 14](images/5.png){ width=50% }
+
+Insertion for a max-heap follows similarly.
+
 60. Given an array representation of binary heap, show the corresponding tree structure. Given a binary heap tree representation, show the corresponding array assuming root is at index [0|1].
+
+Recall that the array representation of a binary heap is essentially level-order:
+
+![The array representation of a max-heap binary tree](images/9.png){ width=40% }
+
 61. What is the difference between "delete" in a heap and "delete" in other types of trees we discussed in class?
+
+With the other trees that we discussed there was this notion of recursively splitting or joining sub-trees when removing nodes. With the removal of a node in a heap, we have a different way of thinking about movement within the tree: percolation.
+
 62. Explain how heapsort is $O(n \log(n))$ and can be done "in place".
-63. Given an array of numbers, show the steps of the optimal heapify algorithm. 
+
+*Weiss et. al* note (in Section 21.5) that heapsort can be performed by doing the following:
+
+> 1. Tossing each item into a binary heap
+> 2. Applying `buildHeap`
+> 3. Calling `deleteMin` $N$ times, with the items exiting the heap in sorted order
+>
+> Step 1 takes linear time total, and step 2 takes linear time. In step 3, each call to `deleteMin` takes logarithmic time, so $N$ calls take $O(N \log(N))$ time. Consequently, we have an $O(N \log(N))$ worst-case sorting algorithm, called heapsort, which is as good as can be achieved by a comparison-based algorithm (see Section 8.8).
+
+They note later within the same section that Heapsort can be done in place because it uses the empty parts of the array in which the heap is stored; calling `deleteMin` frees up one cell, which can then be used to shuffle around a value in the heap.
+
+63. Given an array of numbers, show the steps of the optimal heapify algorithm.
+
+Taken from notes on 2019-03-26.
+
+#### Issue 3: "Heapify"
+
++ We need to be able to convert an existing array into a heap
++ We can build the heap bottom up through repeated application of `percolateDown()`
+  + Start one level above the bottom
+  + Work right to left, bottom up
+  + Apply `percolateDown()` for each non-leaf node
+    + Compare the non-leaf node with its children
+    + Swap if the heap order is violated
+
+#### Example: Min Heap
+
+Assume we're given the array
+
+~~~java
+int[] arr = [92, 47, 21, 20, 12, 45, 63, 61, 17, 55, 37, 25, 64, 83, 73];
+~~~
+
+Then we perform the following steps to convert it to a heap (noting that `percolateDown()` takes as an argument the *index* of the array to percolate):
+
+![Left: Initial heap; Right: after `percolateDown(7)`](images/10.png){ width=50% }
+
+![Left: After `percolateDown(6)`; Right: After `percolateDown(5)`](images/11.png){ width=50% }
+
+![Left: After `percolateDown(4)`; Right: After `percolateDown(3)`](images/12.png){ width=50% }
+
+![Left: After `percolateDown(2)`; Left: After `percolateDown(1)` and `buildHeap` terminate](images/13.png){ width=50% }
+
+#### Heapify Implementation
+
+~~~java
+public void buildHeap() {
+  for (int i = parent(this.size); i >= root(); i--) {
+    this.percolateDown(i);
+  }
+}
+~~~
+
+#### Heapify Complexity
+
++ Assume the tree height is $h$, and count the work as the number of comparisons/swaps done at each level
+  + At the bottom (level 0) there are (at most) $2^h$ nodes
+    + We do not do anything, so the work is zero
+  + Level 1 has $2^{h-1}$ nodes
+    + Each might move down (at most) 1 level
+  + Level 2 has $2^{h-2}$ nodes
+    + Each might move down (at most) 2 levels
+  + Level $i$ is the $i$th from the bottom and has $2^{h-i}$ nodes
+  + Level $h$ is the root, has $2^{h-h} = 2^0 = 1$ node
++ Each level $i$ node can move at most $i$ steps down, so
+  $$\text{moves} = \sum_{i=1}^h i\times 2^{h-i} = \sum_{i=1}^{\log_2(n)} i\times 2^{\log_2(n-i)} = \sum_{i=1}^{\log_2(n)} i\times \frac{2^{\log_2(n)}}{2^i} = n \sum_{i=1}^{\log_2(n)} \frac{i}{2^i}.$$
+  Since
+  $$\sum_{i=1}^\infty \frac{i}{2^i} \rightarrow 2,$$
+  we know that
+  $$n \sum_{i=1}^{\log_2(n)} \frac{i}{2^i} \leq n\times 2$$
+  and
+  $$n\times 2 \in O(n).$$
+  Therefore
+  $$\text{moves} \in O(n).$$
 
 ### All Trees (Binary, K-ary, Binary-Search, AVL, Red-Black, Heap, B/B+)
 
 64. Draw a valid [tree we covered in class].
+
+*Omitted.*
+
 65. Given a tree (as either a picture or an array), determine if it is a valid [tree we covered in class] and, if not, determine what rule is violated and where the error is.
+
+*Omitted.*
+
 66. Explain the "rules" of a [tree we covered in class]. What properties have to be maintained when [adding a node to| removing a node from] the tree?
 67. Given a [tree we covered in class] and a value, show the steps of [searching for | inserting | deleting] that value.
 68. Compare and contrast the [search | insertion | deletion] times for each of the trees we covered.
 69. Given [a scenario] determine which tree you would use, justify your answer. Examples:
     + You need to sort 1000 items.
-    + You want to keep track of 10,000 key-value pairs such that you can (a) efficiently print all
-      
-      the items in key-order, (b) have fast "look-up", and (c) relatively fast insertion.
+    + You want to keep track of 10,000 key-value pairs such that you can (a) efficiently print all the items in key-order, (b) have fast "look-up", and (c) relatively fast insertion.
     + You want to index a very large data set that does not fit into memory
 
 ### Non-Balancing Search Trees (BST)
