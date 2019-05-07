@@ -744,7 +744,74 @@ public void buildHeap() {
 
 *Omitted.*
 
-66. Explain the "rules" of a [tree we covered in class]. What properties have to be maintained when [adding a node to| removing a node from] the tree?
+66. Explain the "rules" of a [tree we covered in class]. What properties have to be maintained when [adding a node to | removing a node from] the tree?
+
+Recall that trees are defined as *a set of nodes and edges with no cycles in which edges point from parent to child.* They have the following properties:
+
++ One special node serves as the root
++ There is exactly one incoming edge per node per root
++ There is a unique path which traverses from the root to each node
+
+Here are some common properties that a tree might have:
+
++ Balanced tree
+  + For a binary tree, the height of the left and right sub-trees of every node differ by 1 or 0 (as used by an AVL tree)
++ Full tree
+  + Every node other than the leaves has the maximum number of children
++ Perfect tree
+  + A full tree in which all leaves have the same depth
++ Complete tree (an almost perfect tree)
+  + A tree that is completely filled, with the possible exception of the bottom level, which is filled from left to right and has no missing nodes
+
+The following special kinds of trees have additional properties:
+
++ Binary
+  + A parent may have at most two children
++ K-ary
+  + A parent may have any number of children
++ Search
+  + The tree must implement an ordering function $\Omega$ such that, given the set of children $C$ and a parent node $p$, $\Omega(C_\ell, p, C_r)$ is true, where $C_\ell, C_r \subseteq C$. As an example, a binary search tree is ordered by $f(\ell) < f(p) <f(r)$ where $f$ is some metric, like the size of a number.
++ AVL
+  + AVL trees are self-balancing
+  + The left and right heights differ by no more than one
+    + That means that every insertion or removal is followed by a re-balancing
+  + Recursively add or remove a node
+  + Unwind the recursion up to adjust the balance of the ancestors
+  + Observation: only nodes along the path from changing point to root may need to (potentially) be balanced
+  + When unbalanced, rotate to adjust heights
+  + Rotation changes the structure of the tree without affecting ordering 
+    + Might need single or double rotation
++ Red-Black
+  + An binary search tree with the following property
+    1. Every node is either red or black
+    2. The root is black
+    3. If a node is red, its children are black -- the converse is not necessarily true
+    4. Every path from the root to `null` has the same number of black nodes
++ Heap
+  + A binary tree that maintains the Heap Order Property
+  + It must also maintain a complete tree
++ B
+  + From wikipedia
+
+    > ... in a 2-3 B-tree (often simply referred to as a 2-3 tree), each internal node may have only 2 or 3 child nodes.
+    >
+    > Each internal node of a B-tree contains a number of keys. The keys act as separation values which divide its subtrees. For example, if an internal node has 3 child nodes (or subtrees) then it must have 2 keys: $a_1$ and $a_2$. All values in the leftmost subtree will be less than $a_1$, all values in the middle subtree will be between $a_1$ and $a_2$, and all values in the rightmost subtree will be greater than $a_2$.
+    >
+    > ...
+    >
+    > The number of branches (or child nodes) from a node will be one more than the number of keys stored in the node. In a 2-3 B-tree, the internal nodes will store either one key (with two child nodes) or two keys (with three child nodes).
+    >
+    > ...
+    > A B-tree is kept balanced by requiring that all leaf nodes be at the same depth. This depth will increase slowly as elements are added to the tree, but an increase in the overall depth is infrequent, and results in all leaf nodes being one more node farther away from the root.
++ B+
+  + From wikipedia
+
+    > A B+ tree can be viewed as a B-tree in which each node contains only keys (not key–value pairs), and to which an additional level is added at the bottom with linked leaves.
+    >
+    > ...
+    >
+    > The order, or branching factor, $b$ of a B+ tree measures the capacity of nodes (i.e., the number of children nodes) for internal nodes in the tree. The actual number of children for a node, referred to here as $m$, is constrained for internal nodes so that $\lceil b/2\rceil \leq m\leq b$. The root is an exception: it is allowed to have as few as two children. For example, if the order of a B+ tree is 7, each internal node (except for the root) may have between 4 and 7 children; the root may have between 2 and 7. Leaf nodes have no children, but are constrained so that the number of keys must be at least $\lceil b/2\rceil$ and at most $b$. In the situation where a B+ tree is nearly empty, it only contains one node, which is a leaf node. (The root is also the single leaf, in this case.) This node is permitted to have as little as one key if necessary and at most $b-1$.
+
 67. Given a [tree we covered in class] and a value, show the steps of [searching for | inserting | deleting] that value.
 68. Compare and contrast the [search | insertion | deletion] times for each of the trees we covered.
 69. Given [a scenario] determine which tree you would use, justify your answer. Examples:
