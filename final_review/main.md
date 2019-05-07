@@ -813,7 +813,63 @@ The following special kinds of trees have additional properties:
     > The order, or branching factor, $b$ of a B+ tree measures the capacity of nodes (i.e., the number of children nodes) for internal nodes in the tree. The actual number of children for a node, referred to here as $m$, is constrained for internal nodes so that $\lceil b/2\rceil \leq m\leq b$. The root is an exception: it is allowed to have as few as two children. For example, if the order of a B+ tree is 7, each internal node (except for the root) may have between 4 and 7 children; the root may have between 2 and 7. Leaf nodes have no children, but are constrained so that the number of keys must be at least $\lceil b/2\rceil$ and at most $b$. In the situation where a B+ tree is nearly empty, it only contains one node, which is a leaf node. (The root is also the single leaf, in this case.) This node is permitted to have as little as one key if necessary and at most $b-1$.
 
 67. Given a [tree we covered in class] and a value, show the steps of [searching for | inserting | deleting] that value.
+
+*TODO: Revisit this question. It'll take quite a bit of room to answer.*
+
 68. Compare and contrast the [search | insertion | deletion] times for each of the trees we covered.
+
+#### Unordered Trees
+
+Trees that are unordered can be thought of as linked lists and have the same performance characteristics.
+
+#### K-ary Search Tree
+
+Technically, a $k$-ary search tree would operation in $\log_k(n)$ time, but in general it operates in *logarithmic* time.
+
+Algorithm | Average | Worst |
+:-------: | :-----: | :---: |
+Space | $O(n)$ | $O(n)$ |
+Search | $O(\log(n))$ | $O(n)$ |
+Insert | $O(\log(n))$ | $O(n)$ |
+Delete | $O(\log(n))$ | $O(n)$ |
+
+#### AVL Tree
+
+Algorithm | Average | Worst |
+:-------: | :-----: | :---: |
+Space | $O(n)$ | $O(n)$ |
+Search | $O(\log(n))$ | $O(\log(n))$ |
+Insert | $O(\log(n))$ | $O(\log(n))$ |
+Delete | $O(\log(n))$ | $O(\log(n))$ |
+
+#### Red-Black Tree
+
+Algorithm | Average | Worst |
+:-------: | :-----: | :---: |
+Space | $O(n)$ | $O(n)$ |
+Search | $O(\log(n))$ | $O(\log(n))$ |
+Insert | $O(\log(n))$ | $O(\log(n))$ |
+Delete | $O(\log(n))$ | $O(\log(n))$ |
+
+#### Binary Heap
+
+Algorithm | Average | Worst |
+:-------: | :-----: | :---: |
+Space | $O(n)$ | $O(n)$ |
+Search | $O(n)$ | $O(n)$ |
+Insert | $O(1)$ | $O(\log(n))$ |
+Delete | $O(\log(n))$ | $O(\log(n))$ |
+Peek | $O(1)$ | $O(1)$ |
+
+#### B/B+ Tree
+
+Algorithm | Average | Worst |
+:-------: | :-----: | :---: |
+Space | $O(n)$ | $O(n)$ |
+Search | $O(\log(n))$ | $O(\log(n))$ |
+Insert | $O(\log(n))$ | $O(\log(n))$ |
+Delete | $O(\log(n))$ | $O(\log(n))$ |
+
 69. Given [a scenario] determine which tree you would use, justify your answer. Examples:
     + You need to sort 1000 items.
     + You want to keep track of 10,000 key-value pairs such that you can (a) efficiently print all the items in key-order, (b) have fast "look-up", and (c) relatively fast insertion.
