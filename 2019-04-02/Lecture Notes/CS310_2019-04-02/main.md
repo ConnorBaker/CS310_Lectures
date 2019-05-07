@@ -73,6 +73,9 @@ Binary Search Tree | $O($height$)$    | $O($height$)$ | $O($height$)$ | min at l
 
 ## Sorted Binary Heap Example
 
++ The left binary tree is a heap, because it satisfies the Heap Order Property
++ The right binary tree is not a heap because it does not satisfy the Heap Order Property -- $6$ is not less than its parent node, $21$, yet it is the child of that node
+
 ![Sorted Binary Heap Example](images/3.png){ width=50% }
 
 ## Heap Order
@@ -87,8 +90,8 @@ Binary Search Tree | $O($height$)$    | $O($height$)$ | $O($height$)$ | min at l
 
 ## Binary Heap Examples
 
-+ **Is it a heap or not?**
-  + **If it is, what kind of heap is it?**
++ The left tree is a max-heap, since the largest values are at the top
++ The right ree is a min-heap, since the smallest values are at the top
 
 ![Examples](images/4.png){ width=75% }
 
