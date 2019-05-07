@@ -1132,6 +1132,22 @@ As an added bit of clarity from Weiss (pg. 713)
 > + A rotation between $X$ and its new child
 
 77. Determine an order of inserting the keys 1, 2, and 3 into an AVL which would require a [single right rotation | single left rotation | left-right double rotation | right-left double rotation].
+
+There are six possible combinations of inserting $1$, $2$, and $3$ into an AVL tree (since $\binom{3}{1} \times \binom{2}{1} \times \binom{1}{1} = 3 \times 2 \times 1 = 6$): $\{[1,2,3], [3,1,2], [2,3,1], [2,1,3], [1,3,2], [3,2,1]\}$. Let's look at all of them.
+
++ $[1,2,3]$
+  + Yields a degenerate tree, requires a single left rotation on two
++ $[3,1,2]$
+  + Double right rotation on two
++ $[2,3,1]$
+  + No rotation needed
++ $[2,1,3]$
+  + No rotation needed
++ $[1,3,2]$
+  + Left-left rotation on two
++ $[3,2,1]$
+  + Yields another degenerate tree, requires a single right rotation on two
+
 78. Determine a set of keys and an order to insert them which would produce each of the cases for inserting into a Red-Black tree. Label each case with a meaningful name (not just "case 1", "case 2", etc.).
 79. Compare AVL trees and Red-Black trees for pros and cons. Explain when/why you would use an AVL instead of a Red-Black Tree and explain when/why you would use an a Red-Black Tree instead of an AVL.
 
