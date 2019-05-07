@@ -875,14 +875,36 @@ Delete | $O(\log(n))$ | $O(\log(n))$ |
     + You want to keep track of 10,000 key-value pairs such that you can (a) efficiently print all the items in key-order, (b) have fast "look-up", and (c) relatively fast insertion.
     + You want to index a very large data set that does not fit into memory
 
+#### Sorting 1000 items
+
+Given an array of 1000 items, I would think that the easiest way to sort would be to heapify the array. Since heapify is $O(n\log(n))$ it is one of the fastest sorting algorithms that we have. Additionally, it can be done in place.
+
+#### Tracking 10,000 Key-Value pairs
+
+Well, mentioning key-value pairs (and disallowing the use of a hash map, since it must be a tree) means that a B+-tree would probably be the best solution for this. A B+-tree can be defined as a set of keys partitioning a set of values -- each node is an array which contains references to arrays of values interspersed between and around the keys.
+
+Printing in order is made simpler by the fact that we'd essentially just be printing the leaves of the tree left-to-right. It is important to note that we use a B+-tree instead of a B-tree since B-trees do not necessarily have their keys in the leaves. Additionally, some B+-tree implementations may choose to use a linked list for the leaves to allow for easier traversal.
+
+B+-trees have $O(\log(n))$ lookup, which is about as fast as it gets without using a hash map.
+
+Insertion takes, on average, $O(\log(n))$ time, which isn't as fast as a Binary Heap's average of $O(1)$ time for insertion. However, it is much easier to print the items in key-order.
+
+#### Index a Very Large Data Set
+
+All of the trees requires $O(n)$ space, so we have to be creative here. Again, I think that a B+-tree would be the best choice. Consider the following excerpt from Wikipedia:
+
+> The primary value of a B+ tree is in storing data for efficient retrieval in a block-oriented storage context — in particular, filesystems. This is primarily because unlike binary search trees, B+ trees have very high fanout (number of pointers to child nodes in a node, typically on the order of 100 or more), which reduces the number of I/O operations required to find an element in the tree.
+
+Filesystems are a prime example of large data sets that typically would not fit in memory. Of course, I'm assuming that when the problem said "does not fit into memory" that the author meant only primary memory and not storage mediums like a disk.
+
 ### Non-Balancing Search Trees (BST)
 
-70. Why is the Big-$O$ of inserting into a BST $O(n)$ and not $O(\log(n))$?
-71. How can you determine the [min | max] value in a BST tree?
-72. Given a node in a BST tree, how can you find [successor | predecessor] of that node (i.e. find the smallest value larger than the node or find the largest value smaller than the node].
-73. Write the code for searching a BST for a given value. Assume a generic `Node<T>` class with a data field and left/right references. Assume the search method is given the root of the tree and a value to search for.
-74. Given a BST and a value, show the steps to remove that value from the BST.
-75. Write the code for [insert | remove| findMin | findMax | printSubset] in a BST. Assume a generic `Node<T>` class with a data field and `left`/`right` references.
+70.  Why is the Big-$O$ of inserting into a BST $O(n)$ and not $O(\log(n))$?
+71.  How can you determine the [min | max] value in a BST tree?
+72.  Given a node in a BST tree, how can you find [successor | predecessor] of that node (i.e. find the smallest value larger than the node or find the largest value smaller than the node].
+73.  Write the code for searching a BST for a given value. Assume a generic `Node<T>` class with a data field and left/right references. Assume the search method is given the root of the tree and a value to search for.
+74.  Given a BST and a value, show the steps to remove that value from the BST.
+75.  Write the code for [insert | remove| findMin | findMax | printSubset] in a BST. Assume a generic `Node<T>` class with a data field and `left`/`right` references.
 
 ### Self-Balancing Search Trees (AVL / Red-Black)
 
