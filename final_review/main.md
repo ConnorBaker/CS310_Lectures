@@ -1097,7 +1097,7 @@ protected BinaryNode<AnyType> remove( AnyType x, BinaryNode<AnyType> t )
 
 76. Explain the "cases" for inserting into a [AVL | Red-Black] tree.
 
-#### Cases for Insertion Into an AVL Tree
+#### Cases for Insertion into an AVL Tree
 
 There are four cases for insertion into an AVL tree (Weiss, pg. 709)
 
@@ -1130,6 +1130,47 @@ As an added bit of clarity from Weiss (pg. 713)
 >
 > + A rotation between $X$’s child and grandchild
 > + A rotation between $X$ and its new child
+
+#### Cases for Insertion into a Red-Black Tree
+
+Recall the properties that a red-black tree has (Weiss pg. 715)
+
+> A red–black tree is a binary search tree having the following ordering properties:
+>
+> 1. Every node is colored either red or black.
+> 2. The root is black.
+> 3. If a node is red, its children must be black.
+> 4. Every path from a node to a null link must contain the same number of black nodes.
+
+##### Bottom-Up Insertion
+
+From Weiss (pg. 716)
+
+> New items must be colored red. If the parent is already red, we must recolor and/or rotate to remove consecutive red nodes.
+>
+> ...
+>
+> Let $X$ be the newly added leaf, $P$ be its parent, $S$ be the sibling of the parent (if it exists), and $G$ be the grandparent. Only $X$ and $P$ are red in this case; $G$ is black because otherwise there would be two consecutive red nodes prior to the insertion—a violation of property 3. Adopting the AVL tree terminology, we say that relative to $G$, $X$ can be either an outside or inside node. If $X$ is an outside grandchild, a single rotation of its parent and grandparent along with some color changes will restore property 3. If $X$ is an inside grandchild, a double rotation along with some color changes are needed.... Even though $X$ is a leaf, we have drawn a more general case that allows $X$ to be in the middle of the tree.
+
+![If $S$ is black, a single rotation between parent and grandparent, with appropriate color changes, restores property 3 if $X$ is an outside grandchild](images/23.png){ width=50% }
+
+![If $S$ is black, a double rotation involving $X$, the parent, and the grandparent, with appropriate color changes, restores property 3 if $X$ is an inside grandchild](images/24.png){ width=50% }
+
+![If $S$ is red, a single rotation between parent and grandparent, with appropriate color changes, restores property 3 between $X$ and $P$](images/25.png){ width=50% }
+
+From Weiss (pg. 717)
+
+> If the parent’s sibling is red, then after we fix things, we induce consecutive red nodes at a higher level. We need to iterate up the tree to fix things.
+
+This is solved by the use of top-down insertion.
+
+##### Top-Down Insertion
+
+From Weiss (pg. 718)
+
+> To avoid the possibility of having to rotate up the tree, we apply a top-down procedure as we are searching for the insertion point. Specifically, we guarantee that, when we arrive at a leaf and insert a node, $S$ is not red. Then we can just add a red leaf and if necessary use one rotation (either single or double).
+
+![Color flip: Only if $X$’s parent is red do we continue with a rotation](images/26.png){ width=50% }
 
 77. Determine an order of inserting the keys 1, 2, and 3 into an AVL which would require a [single right rotation | single left rotation | left-right double rotation | right-left double rotation].
 
