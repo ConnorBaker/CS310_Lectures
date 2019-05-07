@@ -899,19 +899,70 @@ Filesystems are a prime example of large data sets that typically would not fit 
 
 ### Non-Balancing Search Trees (BST)
 
-70.  Why is the Big-$O$ of inserting into a BST $O(n)$ and not $O(\log(n))$?
-71.  How can you determine the [min | max] value in a BST tree?
-72.  Given a node in a BST tree, how can you find [successor | predecessor] of that node (i.e. find the smallest value larger than the node or find the largest value smaller than the node].
-73.  Write the code for searching a BST for a given value. Assume a generic `Node<T>` class with a data field and left/right references. Assume the search method is given the root of the tree and a value to search for.
-74.  Given a BST and a value, show the steps to remove that value from the BST.
-75.  Write the code for [insert | remove| findMin | findMax | printSubset] in a BST. Assume a generic `Node<T>` class with a data field and `left`/`right` references.
+70. Why is the Big-$O$ of inserting into a BST $O(n)$ and not $O(\log(n))$?
+
+The average case is $O(\log(n))$ but the worst case (which is what Big-$O$ notation is for) is $O(n)$. The worst case is $O(n)$ because, while finding the location to insert takes logarithmic time, there's a small amount of book-keeping to do. In the worst-case, the location that we'd want to insert the node in is already occupied (imagine inserting a value at the parent of a leaf); in such a case, we recursively re-link the tree as we insert, from the root to the newly inserted node, each of which takes $O(\log(n))$ time (for a clearer example of why this happens, consider the excerpt from Weiss' page 696, Figure 19.11, which is below for your convenience).
+
+~~~java
+/**
+ * Internal method to insert into a subtree.
+ * @param x the item to insert.
+ * @param t the node that roots the tree.
+ * @return the new root.
+ * @throws DuplicateItemException if x is already present.
+ */
+protected BinaryNode<AnyType> insert( AnyType x, BinaryNode<AnyType> t )
+{
+    if( t == null )
+      t = new BinaryNode<AnyType>( x );
+    else if( x.compareTo( t.element ) < 0 )
+      t.left = insert( x, t.left );
+    else if( x.compareTo( t.element ) > 0 )
+      t.right = insert( x, t.right );
+    else
+      throw new DuplicateItemException( x.toString( ) ); // Duplicate
+    return t;
+}
+~~~
+
+*NB: What follows is a semi-rigorous proof of my own devising to justify the fact that insertion really is $O(n)$. As such, it may have typos or be incorrect.*
+
+Let the height of the point of insertion be $n$ and assume that we have $k$-ary search tree. Then we can model the cost of insertion as
+
+$$
+\sum_{i=0}^n \log_k(n) = n \log_k(n).
+$$
+
+Assuming that the height of the node to be inserted will be greater than the number of children the tree is allowed to have, we can write $n$ as $bk+a$, where $a,b\in\mathbb{N}$. Then $n \log_k(n) = n \log_k(bk+a)$ and since $\log_k(bk) < \log_k(bk + a) < \log_k((b+1)k)$, we know that
+
+$$
+n\log_k(bk) < n \log_k(bk+a) < n \log_k((b+1)k).
+$$
+
+We can write $n\log_k(bk)$ as $n(\log_k(b) + \log_k(k))$ which simplifies to $n(c_0 + 1) = n(c_1)$, where $c_0$ and $c_1$ are some constants.
+
+Similarly, we can write $n \log_k((b+1)k)$ $n(\log_k(b+1) + \log_k(k))$ which simplifies to $n(c_2 + 1) = n(c_3)$, where $c_2$ and $c_3$ are some constants.
+
+Then
+
+$$
+c_1 \times n < n \log_k(bk+a) < c_2 \times n.
+$$
+
+As $c_1 \times n \in O(n)$ and $c_2 \times n \in O(n)$ it follows that $n \log_k(bk+a) \in O(n)$.
+
+71.   How can you determine the [min | max] value in a BST tree?
+72.   Given a node in a BST tree, how can you find [successor | predecessor] of that node (i.e. find the smallest value larger than the node or find the largest value smaller than the node].
+73.   Write the code for searching a BST for a given value. Assume a generic `Node<T>` class with a data field and left/right references. Assume the search method is given the root of the tree and a value to search for.
+74.   Given a BST and a value, show the steps to remove that value from the BST.
+75.   Write the code for [insert | remove| findMin | findMax | printSubset] in a BST. Assume a generic `Node<T>` class with a data field and `left`/`right` references.
 
 ### Self-Balancing Search Trees (AVL / Red-Black)
 
-76. Explain the "cases" for inserting into a [AVL | Red-Black] tree.
-77. Determine an order of inserting the keys 1, 2, and 3 into an AVL which would require a [single right rotation | single left rotation | left-right double rotation | right-left double rotation].
-78. Determine a set of keys and an order to insert them which would produce each of the cases for inserting into a Red-Black tree. Label each case with a meaningful name (not just "case 1", "case 2", etc.).
-79. Compare AVL trees and Red-Black trees for pros and cons. Explain when/why you would use an AVL instead of a Red-Black Tree and explain when/why you would use an a Red-Black Tree instead of an AVL.
+76.  Explain the "cases" for inserting into a [AVL | Red-Black] tree.
+77.  Determine an order of inserting the keys 1, 2, and 3 into an AVL which would require a [single right rotation | single left rotation | left-right double rotation | right-left double rotation].
+78.  Determine a set of keys and an order to insert them which would produce each of the cases for inserting into a Red-Black tree. Label each case with a meaningful name (not just "case 1", "case 2", etc.).
+79.  Compare AVL trees and Red-Black trees for pros and cons. Explain when/why you would use an AVL instead of a Red-Black Tree and explain when/why you would use an a Red-Black Tree instead of an AVL.
 
 ### Union Find / Disjoint Sets
 
