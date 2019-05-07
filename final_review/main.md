@@ -1096,6 +1096,41 @@ protected BinaryNode<AnyType> remove( AnyType x, BinaryNode<AnyType> t )
 ### Self-Balancing Search Trees (AVL / Red-Black)
 
 76. Explain the "cases" for inserting into a [AVL | Red-Black] tree.
+
+#### Cases for Insertion Into an AVL Tree
+
+There are four cases for insertion into an AVL tree (Weiss, pg. 709)
+
+> 1. An insertion in the left subtree of the left child of $X$
+> 2. An insertion in the right subtree of the left child of $X$
+> 3. An insertion in the left subtree of the right child of $X$
+> 4. An insertion in the right subtree of the right child of $X$
+>
+> Cases 1 and 4 are mirror-image symmetries with respect to $X$, as are cases 2 and 3. Consequently, there theoretically are two basic cases. From a programming perspective, of course, there are still four cases and numerous special cases.
+>
+> The first case, in which the insertion occurs on the outside (i.e., left–left or right–right), is fixed by a single rotation of the tree. A single rotation switches the roles of the parent and child while maintaining search order. The second case, in which the insertion occurs on the inside (i.e., left–right or right–left), is handled by the slightly more complex double rotation.
+
+![Single rotation to fix case 1](images/16.png){ width=50% }
+
+![Single rotation fixes an AVL tree after insertion of 1](images/17.png){ width=50% }
+
+![Symmetric single rotation to fix case 4](images/18.png){ width=50% }
+
+![Single rotation does not fix case 2](images/19.png){ width=50% }
+
+![Left-Right double rotation to fix case 2](images/20.png){ width=50% }
+
+![Double rotation fixes AVL tree after the insertion of 5](images/21.png){ width=50% }
+
+![Right-Left double rotation to fix case 3](images/22.png){ width=50% }
+
+As an added bit of clarity from Weiss (pg. 713)
+
+> Finally, note that, although a double rotation appears complex, it turns out to be equivalent to the following sequence:
+>
+> + A rotation between $X$’s child and grandchild
+> + A rotation between $X$ and its new child
+
 77. Determine an order of inserting the keys 1, 2, and 3 into an AVL which would require a [single right rotation | single left rotation | left-right double rotation | right-left double rotation].
 78. Determine a set of keys and an order to insert them which would produce each of the cases for inserting into a Red-Black tree. Label each case with a meaningful name (not just "case 1", "case 2", etc.).
 79. Compare AVL trees and Red-Black trees for pros and cons. Explain when/why you would use an AVL instead of a Red-Black Tree and explain when/why you would use an a Red-Black Tree instead of an AVL.
