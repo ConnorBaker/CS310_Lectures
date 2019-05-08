@@ -1314,4 +1314,35 @@ A naive-union makes the second tree a child of the root of the first. A rank uni
 With a naive-find, we simply search through the tree for the value. With path-compression, after finding the node which holds the value we are searching for, we make the node a direct child of the root, speeding up subsequent attempts to find that value (or any value in that node's subtree).
 
 84. Given a series of union and find operations, show the effects on the array which backs the union-find data structure using [naive | rank] union and [naive | path compression] find.
+
+#### Naive Union with Naive Find
+
+![A forest and its eight elements, initially in different sets](images/31.png){ width=50% }
+
+![The forest after the `union` of trees with roots $4$ and $5$](images/32.png){ width=50% }
+
+![The forest after the `union` of trees with roots $6$ and $7$](images/33.png){ width=50% }
+
+![The forest after the `union` of trees with roots $4$ and $6$](images/34.png){ width=50% }
+
+#### Naive Union with Path Compression
+
+![Worst-case tree for $N=16$](images/35.png){ width=50% }
+
+![Path compression resulting from a `find(14)`](images/36.png){ width=50% }
+
+#### Rank Union with Naive Find
+
+*Technically*, you can't have rank-union and naive find because rank-union is defined as union-by-height with path-compression... but I'll just consider this to be standard union-by-height.
+
+![A forest of trees](images/37.png){ width=40% }
+
+![The forest after union-by-height `union(3, 4)` is invoked (the height is encoded as a negative number)](images/38.png){ width=50% }
+
+#### Rank Union with Path Compression
+
+Which is really just rank-union.
+
+Essentially identical to union-by-height except the structure of the tree can be re-arranged since we're using path compression.
+
 85. What is special about the performance analysis of union-find? Hint: this has to do with path compression and the definition of $log^*(n)$.
