@@ -1279,8 +1279,39 @@ In fact, this height property is a defining characteristic of AVL trees. From We
 ### Union Find / Disjoint Sets
 
 80. Explain the types of problems the union-find data structure is designed to help with. Hint: why is it called "union-find".
+
+When trying to perform operations on equivalence classes (which can be represented with disjoint sets), one uses the `find` (as in, finding the set an element belongs to, which is equivalent to returning the item's equivalence class) and `union` (to take the union of the two sets that two elements belong to, which is equivalent to adding two relations) operations quite frequently. The data structure which best handles these operations has come to be known as the "union/find data structure."
+
+Applications include anything involving partitions or relations: generating mazes, minimum spanning trees, or finding the nearest common ancestor.
+
 81. Given an array representing the results of a series of unions and finds, show the forest (graph form) it represents.
+
+Find operations don't change array (if we assume that we're not using path-compression), so we really only need to be cognizant of union operations.
+
+Let's work over the following array (from Weiss Figure 24.16):
+
+Index | Value |
+:-: | :-: |
+0 | -1 |
+1 | -1 |
+2 | -1 |
+3 | 4 |
+4 | -5 |
+5 | 4 |
+6 | 4 |
+7 | 6 |
+
+We can tell that $0$, $1$, and $2$ are roots since they have a value of $-1$. Since $3$ has a positive value, we know that it is referring to an index, and is a child of $4$ -- we can see the same for $5$ and $6$. The node $7$ is a child of $6$, which as we just mentioned is a child of $4$. That means that $4$ contains five nodes, which checks out since the value of the index `4` is $-5$. Our resulting forest is then
+
+![The forest formed by union-by-size](images/30.png){ width=35% }
+
 82. Explain the difference between "naive-union" and "rank union".
+
+A naive-union makes the second tree a child of the root of the first. A rank union, by comparison, is the result of doing a union-by-height when performing path compressions. It makes the shorter (height-wise) tree a child of the root of the taller of the two. The benefit of this is that we have logarithmic depth and an nearly linear guarantee on the running time for a sequence of $m$ operations.
+
 83. Explain the difference between "naive-find" and "path compression find".
+
+With a naive-find, we simply search through the tree for the value. With path-compression, after finding the node which holds the value we are searching for, we make the node a direct child of the root, speeding up subsequent attempts to find that value (or any value in that node's subtree).
+
 84. Given a series of union and find operations, show the effects on the array which backs the union-find data structure using [naive | rank] union and [naive | path compression] find.
 85. What is special about the performance analysis of union-find? Hint: this has to do with path compression and the definition of $log^*(n)$.
