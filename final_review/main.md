@@ -1307,7 +1307,7 @@ We can tell that $0$, $1$, and $2$ are roots since they have a value of $-1$. Si
 
 82. Explain the difference between "naive-union" and "rank union".
 
-A naive-union makes the second tree a child of the root of the first. A rank union, by comparison, is the result of doing a union-by-height when performing path compressions. It makes the shorter (height-wise) tree a child of the root of the taller of the two. The benefit of this is that we have logarithmic depth and an nearly linear guarantee on the running time for a sequence of $m$ operations.
+A naive-union makes the second tree a child of the root of the first (which produces very tall trees). A rank union, by comparison, is the result of doing a union-by-height when performing path compressions. It makes the shorter (height-wise) tree a child of the root of the taller of the two. The benefit of this is that we have logarithmic depth and an nearly linear guarantee on the running time for a sequence of $m$ operations.
 
 83. Explain the difference between "naive-find" and "path compression find".
 
@@ -1345,4 +1345,23 @@ Which is really just rank-union.
 
 Essentially identical to union-by-height except the structure of the tree can be re-arranged since we're using path compression.
 
-85. What is special about the performance analysis of union-find? Hint: this has to do with path compression and the definition of $log^*(n)$.
+85. What is special about the performance analysis of union-find? Hint: this has to do with path compression and the definition of $\log^*(n)$.
+
+Path compression greatly increases the complexity of the analysis because it effectively speeds up our computations over time (proportional to the inverse Ackermann function).
+
+Recall the definition of $\log^*(n)$:
+
+$$\log ^{*}n \equiv {\begin{cases}0 &{\text{if }}n\leq 1;\\1+\log ^{*}(\log n)&{\text{if }}n>1\end{cases}}.$$
+
+This function grows so slowly that it can be regarded as a constant. We know that rank-union takes $O(n + m \log^*(n))$ time for $m$ operations. However, since $\log^*(n)$ is approximately constant, $O(n + m \log^*(n)) \approx O(n + m).$
+
+Therefore the complexity table is
+
+Implementation | Big-$O$ |
+:------------: | :-----: |
+Set of sets    | $O(mn)$ |
+Quick find     | $O(mn)$ |
+Tree (naive)   | $O(mn)$ |
+Tree (union-by-height) | $O(n + m\log(n))$ |
+Tree (naive-union and path compression) | $O(n + m\log(n))$ |
+Tree (rank-union) | $O(n + m)$ |
